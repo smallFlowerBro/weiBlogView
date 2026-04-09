@@ -1,0 +1,113 @@
+ * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+body { 
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5; 
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.3s, color 0.2s; 
+}
+
+:root { 
+    --bg-body: linear-gradient(145deg, #f0f7ff 0%, #eef4fe 100%); 
+    --bg-surface: #ffffff; 
+    --bg-card: #ffffff; 
+    --bg-soft: #eef4ff; 
+    --text-primary: #13294b; 
+    --text-secondary: #2c4b6e; 
+    --text-muted: #6c8eae; 
+    --border-light: #e2edf7; 
+    --tech-blue: #2b6ef0; 
+    --tech-blue-light: #5b8ef5; 
+    --tech-glow: rgba(43,110,240,0.15); 
+    --shadow-sm: 0 6px 14px rgba(43,110,240,0.05); 
+    --shadow-md: 0 12px 28px rgba(43,110,240,0.08); 
+    --shadow-hover: 0 20px 30px rgba(43,110,240,0.12); 
+    --dot-color: rgba(43,110,240,0.15); 
+    --line-grad-start: rgba(43,110,240,0.08); 
+    --line-grad-end: transparent; 
+    --code-bg: #f5f9ff; 
+    --code-border: #e0eaf5; 
+}
+ body.green-eco {
+     --bg-body: linear-gradient(145deg, #eef7f0 0%, #e6f3ea 100%);  /* 晨雾绿渐变 */
+     --bg-surface: #ffffff;                                          /* 纯白卡片基底 */
+     --bg-card: #ffffff;                                              /* 纯白卡片 */
+     --bg-soft: #eef7f0;                                              /* 浅薄荷软背景 */
+     --text-primary: #1a3a2a;                                         /* 深林绿主文字 */
+     --text-secondary: #2d5a42;                                       /* 苔原绿次级文字 */
+     --text-muted: #6f9a7c;                                           /* 哑光鼠尾草绿 */
+     --border-light: #d4e8da;                                         /* 嫩枝浅绿边框 */
+     --tech-blue: #2ecc71;                                            /* 主色：翠玉绿 */
+     --tech-blue-light: #6be39b;                                      /* 亮荧绿点缀 */
+     --tech-glow: rgba(46,204,113,0.12);                              /* 翠绿柔光晕 */
+     --shadow-sm: 0 6px 14px rgba(46,204,113,0.06);                   /* 绿调轻阴影 */
+     --shadow-md: 0 12px 28px rgba(46,204,113,0.10);                  /* 绿调中阴影 */
+     --shadow-hover: 0 20px 30px rgba(46,204,113,0.14);               /* 绿调悬浮阴影 */
+     --dot-color: rgba(46,204,113,0.12);                              /* 绿点阵纹理 */
+     --line-grad-start: rgba(46,204,113,0.08);                        /* 绿渐变起点 */
+     --line-grad-end: transparent;                                    /* 渐变终点透明 */
+     --code-bg: #f4faf6;                                              /* 代码块极浅绿底 */
+     --code-border: #dcecdd;                                          /* 代码框柔绿边线 */
+ }
+ body.dark {
+    --bg-body: #0a0f1a;
+    --bg-surface: #111927;
+    --bg-card: #131e2c;
+    --bg-soft: #0f1824;
+    --text-primary: #eef5ff;
+    --text-secondary: #b9d0f0;
+    --text-muted: #7e95b0;
+    --border-light: #253545;
+    --tech-blue: #5f9eff;
+    --tech-blue-light: #7eaeff;
+    --tech-glow: rgba(95,158,255,0.2);
+    --shadow-sm: 0 6px 14px rgba(0,0,0,0.3);
+    --shadow-md: 0 12px 28px rgba(0,0,0,0.4);
+    --shadow-hover: 0 20px 30px rgba(0,0,0,0.5);
+    --dot-color: rgba(95,158,255,0.2); 
+    --line-grad-start: rgba(95,158,255,0.1);
+    --code-bg: #0f1824; 
+    --code-border: #253545; 
+}
+body {
+    background: var(--bg-body); 
+    color: var(--text-primary); 
+}
+body::before {
+    content: ''; 
+    position: fixed; 
+    inset: 0; 
+    background-image: radial-gradient(circle at 2px 2px, var(--dot-color) 1px, transparent 1px);
+    background-size: 28px 28px; pointer-events: none; z-index: 0; opacity: 0.6;
+}
+.tech-line, .tech-line2 {
+    position: fixed; 
+    border-radius: 50%; 
+    pointer-events: none; 
+    z-index: 0;
+    background: radial-gradient(circle, var(--line-grad-start) 0%, var(--line-grad-end) 70%);
+}
+.tech-line { 
+    bottom: 10%; 
+    right: -50px; 
+    width: 200px; 
+    height: 200px; 
+}
+.tech-line2 { 
+    top: 20%; 
+    left: -30px; 
+    width: 300px; 
+    height: 300px; 
+}
+
+/* 统一版心 */
+.container { 
+    max-width: 1280px; 
+    margin: 0 auto; 
+    padding: 0 2rem; 
+    position: relative; 
+    z-index: 2;
+}

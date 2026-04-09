@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>LightVue · 文章精选 | 科技浅蓝</title>
+    <!-- 字体与图标库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.2s ease;
+        }
+
+        /* 主题变量 (浅色/深色) */
+        :root {
+            --bg-body: linear-gradient(145deg, #f0f7ff 0%, #eef4fe 100%);
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-soft: #eef4ff;
+            --text-primary: #13294b;
+            --text-secondary: #2c4b6e;
+            --text-muted: #6c8eae;
+            --border-light: #e2edf7;
+            --tech-blue: #2b6ef0;
+            --tech-blue-light: #5b8ef5;
+            --tech-glow: rgba(43, 110, 240, 0.15);
+            --shadow-sm: 0 6px 14px rgba(43, 110, 240, 0.05);
+            --shadow-md: 0 12px 28px rgba(43, 110, 240, 0.08);
+            --shadow-hover: 0 20px 30px rgba(43, 110, 240, 0.12);
+            --dot-color: rgba(43, 110, 240, 0.15);
+            --line-grad-start: rgba(43, 110, 240, 0.08);
+            --line-grad-end: transparent;
+        }
+
+        body.dark {
+            --bg-body: #0a0f1a;
+            --bg-surface: #111927;
+            --bg-card: #131e2c;
+            --bg-soft: #0f1824;
+            --text-primary: #eef5ff;
+            --text-secondary: #b9d0f0;
+            --text-muted: #7e95b0;
+            --border-light: #253545;
+            --tech-blue: #5f9eff;
+            --tech-blue-light: #7eaeff;
+            --tech-glow: rgba(95, 158, 255, 0.2);
+            --shadow-sm: 0 6px 14px rgba(0,0,0,0.3);
+            --shadow-md: 0 12px 28px rgba(0,0,0,0.4);
+            --shadow-hover: 0 20px 30px rgba(0,0,0,0.5);
+            --dot-color: rgba(95, 158, 255, 0.2);
+            --line-grad-start: rgba(95, 158, 255, 0.1);
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+
+        /* 点阵背景 + 科技小路装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, var(--dot-color) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .tech-line {
+            position: fixed;
+            bottom: 10%;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--line-grad-start) 0%, var(--line-grad-end) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .tech-line2 {
+            top: 20%;
+            left: -30px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--line-grad-start) 0%, var(--line-grad-end) 70%);
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 统一版心 */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 头部导航 */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(43,110,240,0.2);
+            transition: all 0.2s;
+        }
+        body.dark .site-header {
+            background: rgba(17, 25, 39, 0.85);
+            border-bottom-color: rgba(95,158,255,0.3);
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(145deg, var(--tech-blue), #1a4fcf);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px var(--tech-glow);
+            position: relative;
+            overflow: hidden;
+        }
+        .logo-icon i {
+            font-size: 1.5rem;
+            color: white;
+            z-index: 2;
+        }
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(125deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+        }
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--tech-blue), #0f3c9e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .logo-badge {
+            font-size: 0.7rem;
+            background: var(--bg-soft);
+            padding: 0.2rem 0.5rem;
+            border-radius: 30px;
+            color: var(--tech-blue);
+            margin-left: 0.3rem;
+            font-weight: 500;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-menu a {
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .nav-menu a:hover {
+            color: var(--tech-blue);
+        }
+        .theme-toggle {
+            background: var(--bg-soft);
+            border: none;
+            border-radius: 40px;
+            width: 2.3rem;
+            height: 2.3rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--tech-blue);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--tech-blue);
+            color: white;
+            transform: scale(0.96);
+        }
+
+        /* 页面头部 */
+        .page-header {
+            text-align: center;
+            margin: 2rem 0 1.5rem;
+        }
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--tech-blue));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .page-header p {
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* 搜索筛选栏 */
+        .search-bar {
+            background: var(--bg-card);
+            border-radius: 1.2rem;
+            border: 1px solid var(--border-light);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        .search-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        .search-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .search-group input, .search-group select {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-soft);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            outline: none;
+        }
+        .search-group input:focus, .search-group select:focus {
+            border-color: var(--tech-blue);
+            box-shadow: 0 0 0 2px var(--tech-glow);
+        }
+        .search-btn {
+            background: var(--tech-blue);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .search-btn:hover {
+            background: var(--tech-blue-light);
+            transform: translateY(-2px);
+        }
+        .reset-btn {
+            background: var(--bg-soft);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .reset-btn:hover {
+            background: var(--border-light);
+        }
+        .result-info {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--tech-blue);
+            text-align: right;
+        }
+
+        /* 文章列表网格 */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+        .article-card {
+            background: var(--bg-card);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--tech-blue-light);
+        }
+        .article-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: var(--bg-soft);
+        }
+        .article-content {
+            padding: 1.2rem 1.2rem 1.5rem;
+        }
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+        .article-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+        .article-excerpt {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            padding-top: 0.8rem;
+            margin-top: 0.3rem;
+        }
+        .tag-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: var(--bg-soft);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            color: var(--tech-blue);
+        }
+        .no-results {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* 返回链接 */
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0 1rem;
+            color: var(--tech-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-home:hover {
+            text-decoration: underline;
+        }
+
+        /* 页脚 */
+        .site-footer {
+            border-top: 1px solid var(--border-light);
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        body.dark .site-footer {
+            background: rgba(10,15,26,0.8);
+        }
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            margin-left: 1.5rem;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--tech-blue);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            .search-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="tech-line"></div>
+<div class="tech-line2"></div>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-book-open"></i></div>
+            <div class="logo-text">LightVue<span class="logo-badge">Archive</span></div>
+        </div>
+        <div class="nav-menu">
+            <a href="#">首页</a>
+            <a href="#">文章</a>
+            <a href="#">灵感库</a>
+            <a href="#">关于</a>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <a href="#" class="back-home" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回首页</a>
+        <div class="page-header">
+            <h1>📚 文章精选 · 知识库</h1>
+            <p>通过关键词或时间范围，精准检索你感兴趣的内容</p>
+        </div>
+
+        <!-- 搜索筛选区 -->
+        <div class="search-bar">
+            <div class="search-row">
+                <div class="search-group" style="flex:2;">
+                    <label><i class="fas fa-search"></i> 关键词</label>
+                    <input type="text" id="keywordInput" placeholder="标题、摘要或标签关键词...">
+                </div>
+                <div class="search-group">
+                    <label><i class="far fa-calendar-alt"></i> 起始时间</label>
+                    <input type="month" id="startDate">
+                </div>
+                <div class="search-group">
+                    <label><i class="far fa-calendar-alt"></i> 结束时间</label>
+                    <input type="month" id="endDate">
+                </div>
+                <div class="search-group">
+                    <label><i class="fas fa-filter"></i> 分类</label>
+                    <select id="categorySelect">
+                        <option value="">全部分类</option>
+                        <option value="Vue 生态">Vue 生态</option>
+                        <option value="前端架构">前端架构</option>
+                        <option value="CSS 艺术">CSS 艺术</option>
+                        <option value="开源贡献">开源贡献</option>
+                        <option value="AI 编程">AI 编程</option>
+                        <option value="旅行随笔">旅行随笔</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="search-btn" id="searchBtn"><i class="fas fa-arrow-right"></i> 查询</button>
+                    <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> 重置</button>
+                </div>
+            </div>
+            <div class="result-info" id="resultInfo">共 0 篇文章</div>
+        </div>
+
+        <!-- 文章列表网格 -->
+        <div class="articles-grid" id="articlesGrid"></div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-copyright">© 2025 LightVue · 文章精选 | 科技浅蓝 | 知识沉淀</div>
+        <div class="footer-links">
+            <a href="#">关于</a>
+            <a href="#">实验室</a>
+            <a href="#">友链</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    (function() {
+        // ----------------------------- 文章数据 (模拟) -----------------------------
+        const articlesData = [
+            { id: 1, title: 'Vue 3 组合式 API 最佳实践与逻辑复用', excerpt: '深入理解 composables、响应式原理，构建高复用组件库，提升开发体验。', cover: 'https://picsum.photos/id/106/400/220', date: '2025-04-08', category: 'Vue 生态', tags: ['Vue3', 'Composition API', 'TypeScript'] },
+            { id: 2, title: '现代 CSS 魔法：容器查询与网格进化', excerpt: '用纯 CSS 实现玻璃态、动态布局，让界面充满科技呼吸感。', cover: 'https://picsum.photos/id/169/400/220', date: '2025-03-28', category: 'CSS 艺术', tags: ['CSS', 'Grid', '容器查询'] },
+            { id: 3, title: '前端性能精讲：从指标到极致调优', excerpt: 'Core Web Vitals、代码分割、预加载策略，让应用秒开。', cover: 'https://picsum.photos/id/91/400/220', date: '2025-03-20', category: '前端架构', tags: ['性能优化', 'Web Vitals', 'Lighthouse'] },
+            { id: 4, title: '从零参与开源：我的第一个 PR 之旅', excerpt: 'Git 协作、社区沟通，真实经验分享，拥抱开源世界。', cover: 'https://picsum.photos/id/42/400/220', date: '2025-03-10', category: '开源贡献', tags: ['开源', 'Git', '社区'] },
+            { id: 5, title: 'Vite 5 时代：更快的开发体验与构建优化', excerpt: '从配置插件到预编译优化，深度剖析 Vite 生态，提升项目启动与热更新速度。', cover: 'https://picsum.photos/id/26/400/220', date: '2025-02-28', category: '前端架构', tags: ['Vite', '构建工具', 'ESBuild'] },
+            { id: 6, title: 'TypeScript 高阶类型实战：让前端更健壮', excerpt: '泛型、条件类型与工具类型，打造可推断且安全的组件接口。', cover: 'https://picsum.photos/id/177/400/220', date: '2025-02-15', category: '前端架构', tags: ['TypeScript', '类型系统'] },
+            { id: 7, title: '设计系统：从零构建组件库与协作规范', excerpt: 'Design Tokens、组件库文档、跨团队复用经验，提升产品一致性。', cover: 'https://picsum.photos/id/20/400/220', date: '2025-01-20', category: 'CSS 艺术', tags: ['设计系统', 'Figma', 'Storybook'] },
+            { id: 8, title: 'AI 赋能前端：智能编码与设计的新范式', excerpt: '探索 GitHub Copilot、AI 生成 UI 的前沿实践与未来趋势。', cover: 'https://picsum.photos/id/96/400/220', date: '2025-01-05', category: 'AI 编程', tags: ['AI', 'Copilot', '机器学习'] },
+            { id: 9, title: '山海之间：大理的慢时光与数字游民生活', excerpt: '离开屏幕，寻找灵感与自然的平衡，记录一段数字游牧体验。', cover: 'https://picsum.photos/id/169/400/220', date: '2024-12-18', category: '旅行随笔', tags: ['旅行', '生活', '感悟'] },
+            { id: 10, title: 'Pinia 状态管理：从入门到源码分析', excerpt: '轻量级 Vue 状态管理，替代 Vuex 的最佳方案，深入原理。', cover: 'https://picsum.photos/id/155/400/220', date: '2024-12-01', category: 'Vue 生态', tags: ['Pinia', 'Vue3', '状态管理'] }
+        ];
+
+        // DOM 元素
+        const keywordInput = document.getElementById('keywordInput');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const categorySelect = document.getElementById('categorySelect');
+        const searchBtn = document.getElementById('searchBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const articlesGrid = document.getElementById('articlesGrid');
+        const resultInfo = document.getElementById('resultInfo');
+
+        // 筛选函数 (模糊查询：标题、摘要、标签)
+        function filterArticles() {
+            const keyword = keywordInput.value.trim().toLowerCase();
+            const startMonth = startDateInput.value;  // YYYY-MM
+            const endMonth = endDateInput.value;
+            const category = categorySelect.value;
+
+            let filtered = [...articlesData];
+
+            // 关键词模糊匹配 (标题、摘要、标签)
+            if (keyword) {
+                filtered = filtered.filter(article => {
+                    const titleMatch = article.title.toLowerCase().includes(keyword);
+                    const excerptMatch = article.excerpt.toLowerCase().includes(keyword);
+                    const tagsMatch = article.tags.some(tag => tag.toLowerCase().includes(keyword));
+                    return titleMatch || excerptMatch || tagsMatch;
+                });
+            }
+
+            // 分类筛选
+            if (category) {
+                filtered = filtered.filter(article => article.category === category);
+            }
+
+            // 时间范围筛选 (基于月份)
+            if (startMonth) {
+                filtered = filtered.filter(article => article.date.slice(0, 7) >= startMonth);
+            }
+            if (endMonth) {
+                filtered = filtered.filter(article => article.date.slice(0, 7) <= endMonth);
+            }
+
+            // 按日期倒序排列 (最新优先)
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            return filtered;
+        }
+
+        // 渲染文章列表
+        function renderArticles(articles) {
+            articlesGrid.innerHTML = '';
+            if (articles.length === 0) {
+                articlesGrid.innerHTML = '<div class="no-results">✨ 没有找到匹配的文章，试试其他关键词吧 ✨</div>';
+                resultInfo.textContent = '共 0 篇文章';
+                return;
+            }
+            resultInfo.textContent = `共 ${articles.length} 篇文章`;
+            articles.forEach(article => {
+                const card = document.createElement('div');
+                card.className = 'article-card';
+                // 格式化日期
+                const formattedDate = new Date(article.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+                card.innerHTML = `
+                    <img class="article-img" src="${article.cover}" alt="${article.title}" loading="lazy">
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span><i class="far fa-calendar-alt"></i> ${formattedDate}</span>
+                            <span><i class="fas fa-tag"></i> ${article.category}</span>
+                        </div>
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-footer">
+                            <div class="tag-list">
+                                ${article.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                            </div>
+                            <span><i class="fas fa-arrow-right"></i> 阅读</span>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    showToast(`📖 演示模式：即将打开《${article.title}》`);
+                });
+                articlesGrid.appendChild(card);
+            });
+        }
+
+        // 刷新列表
+        function updateList() {
+            const filtered = filterArticles();
+            renderArticles(filtered);
+        }
+
+        // 重置所有筛选条件
+        function resetFilters() {
+            keywordInput.value = '';
+            startDateInput.value = '';
+            endDateInput.value = '';
+            categorySelect.value = '';
+            updateList();
+            showToast('✨ 已重置所有筛选条件');
+        }
+
+        // 事件绑定
+        searchBtn.addEventListener('click', updateList);
+        resetBtn.addEventListener('click', resetFilters);
+        // 支持回车搜索
+        keywordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateList();
+        });
+
+        // 初始化渲染
+        updateList();
+
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        const storedTheme = localStorage.getItem('lightvue-theme');
+        function applyThemeUI(dark) {
+            if (dark) {
+                document.body.classList.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('lightvue-theme', 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('lightvue-theme', 'light');
+            }
+        }
+        if (storedTheme === 'dark') applyThemeUI(true);
+        else applyThemeUI(false);
+        themeToggle.addEventListener('click', () => {
+            applyThemeUI(!document.body.classList.contains('dark'));
+        });
+
+        // Toast 提示
+        function showToast(msg) {
+            let toast = document.querySelector('.archive-toast');
+            if (toast) toast.remove();
+            toast = document.createElement('div');
+            toast.className = 'archive-toast';
+            toast.textContent = msg;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '24px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'var(--tech-blue)';
+            toast.style.color = 'white';
+            toast.style.padding = '8px 20px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontSize = '0.8rem';
+            toast.style.fontWeight = '500';
+            toast.style.zIndex = '9999';
+            toast.style.boxShadow = '0 4px 12px var(--tech-glow)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // 返回首页演示
+        const backBtn = document.getElementById('backHomeBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showToast('✨ 返回首页 (演示模式)');
+            });
+        }
+
+        // 导航演示
+        const navLinks = document.querySelectorAll('.nav-menu a:not(.theme-toggle), .footer-links a, .logo a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                let txt = link.innerText.trim();
+                if (txt.length > 20) txt = txt.slice(0, 18) + '…';
+                showToast(`✨ 演示模式：${txt} 页面建设中`);
+            });
+        });
+    })();
+</script>
+</body>
+</html>
