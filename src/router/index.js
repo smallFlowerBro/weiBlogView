@@ -1,6 +1,8 @@
 import { createRouter,createWebHashHistory } from "vue-router";
 
 //引入页面视图
+//博客客户端框架页
+import IndexView from "@/views/fronted/IndexView.vue";
 //首页
 import HomeView from "@/views/fronted/HomeView.vue";
 //关于页面
@@ -14,14 +16,45 @@ import QueryArticlesView from "@/views/fronted/QueryArticlesView.vue";
 import TravelNoteView from "@/views/fronted/TravelNoteView.vue";
 //路由表
 let routes = [
-    { path: "/", component: HomeView },
-    { path: "/home", component: HomeView },
-    { path: "/about", component: AboutView },
-    { path: "/about", component: AboutView },
-    { path: "/article", component: QueryArticlesView },
-    // { path: "/article", component: ArticleView },
-    { path: "/travelNote", component: TravelNoteView },
-    { path: "/idea", component: IdeaView }
+
+
+    { path: "/",
+      component: IndexView,
+      children:[
+          {
+              path:"",
+              component:HomeView
+          },
+          {
+              path:"/home",
+              component:HomeView
+          },
+          {
+              path: "/about",
+              component: AboutView
+          },
+          {
+              path: "/article",
+              component: QueryArticlesView
+          },
+          // { path: "/article", component: ArticleView },
+          {
+              path: "/travelNote",
+              component: TravelNoteView
+          },
+          {
+              path: "/idea",
+              component: IdeaView
+          }
+      ]
+
+    },
+    // { path: "/home", component: HomeView },
+    // { path: "/about", component: AboutView },
+    // { path: "/article", component: QueryArticlesView },
+    // // { path: "/article", component: ArticleView },
+    // { path: "/travelNote", component: TravelNoteView },
+    // { path: "/idea", component: IdeaView }
 
 ]
 

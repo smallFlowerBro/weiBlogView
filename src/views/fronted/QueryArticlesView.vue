@@ -1,8 +1,6 @@
 <template>
-  <SiteHeader></SiteHeader>
   <main>
     <div class="container">
-      <a href="#" class="back-home" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回首页</a>
       <div class="page-header">
         <h1>📚 文章精选 · 知识库</h1>
         <p>通过关键词或时间范围，精准检索你感兴趣的内容</p>
@@ -47,7 +45,6 @@
       <div class="articles-grid" id="articlesGrid"></div>
     </div>
   </main>
-<site-footer></site-footer>
 </template>
 <style scoped>
 /* 页面头部 */
@@ -424,29 +421,6 @@ body.dark .site-footer {
 
     // 初始化渲染
     updateList();
-
-    // 主题切换
-    const themeToggle = document.getElementById('themeToggle');
-    const icon = themeToggle.querySelector('i');
-    const storedTheme = localStorage.getItem('lightvue-theme');
-    function applyThemeUI(dark) {
-      if (dark) {
-        document.body.classList.add('dark');
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-        localStorage.setItem('lightvue-theme', 'dark');
-      } else {
-        document.body.classList.remove('dark');
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-        localStorage.setItem('lightvue-theme', 'light');
-      }
-    }
-    if (storedTheme === 'dark') applyThemeUI(true);
-    else applyThemeUI(false);
-    themeToggle.addEventListener('click', () => {
-      applyThemeUI(!document.body.classList.contains('dark'));
-    });
 
     // Toast 提示
     function showToast(msg) {

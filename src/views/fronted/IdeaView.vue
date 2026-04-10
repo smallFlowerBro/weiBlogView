@@ -1,9 +1,6 @@
 <template>
-    <SiteHeader></SiteHeader>
     <main>
     <div class="container">
-        <a href="#" class="back-home" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回首页</a>
-
         <div class="lab-header">
             <h1>⚡ 灵感实验室</h1>
             <p>探索前沿创意 · 实验性交互 · 技术游乐场</p>
@@ -101,7 +98,6 @@
         </div>
     </div>
 </main>
-<SiteFooter></SiteFooter>
 </template>
 
 <script setup>

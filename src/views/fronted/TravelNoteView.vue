@@ -1,8 +1,6 @@
 <template>
-  <SiteHeader></SiteHeader>
   <main>
     <div class="container">
-      <a href="#" class="back-home" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回首页</a>
       <div class="page-header">
         <h1>📸 行旅印记 · 光影瀑布</h1>
         <p>照片与视频的时光长廊 | 点击可放大查看</p>
@@ -30,7 +28,6 @@
       <div id="modalCaption" class="modal-caption"></div>
     </div>
   </div>
-  <SiteFooter></SiteFooter>
 </template>
 <style scoped>
   .page-header {

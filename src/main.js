@@ -11,17 +11,17 @@ import router from './router'
 let app = createApp(App)
 
 
-// --- 自动注册全局组件开始 ---
-const components = import.meta.glob('./components/common/*.vue', { eager: true })
-
-Object.entries(components).forEach(([path, component]) => {
-  // 从路径中提取文件名作为组件名
-  // 例如：./components/MyButton.vue -> MyButton
-  const componentName = path.split('/').pop().replace(/\.\w+$/, '')
-  
-  // 注册组件
-  app.component(componentName, component.default || component)
-})
+// // --- 自动注册全局组件开始 ---
+// const components = import.meta.glob('./components/common/*.vue', { eager: true })
+//
+// Object.entries(components).forEach(([path, component]) => {
+//   // 从路径中提取文件名作为组件名
+//   // 例如：./components/MyButton.vue -> MyButton
+//   const componentName = path.split('/').pop().replace(/\.\w+$/, '')
+//
+//   // 注册组件
+//   app.component(componentName, component.default || component)
+// })
 
 
 //启用路由
