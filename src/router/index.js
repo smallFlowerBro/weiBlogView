@@ -14,6 +14,7 @@ import ArticleView from "@/views/fronted/ArticleView.vue";
 import QueryArticlesView from "@/views/fronted/QueryArticlesView.vue";
 //旅游
 import TravelNoteView from "@/views/fronted/TravelNoteView.vue";
+//
 //路由表
 let routes = [
 
@@ -49,6 +50,10 @@ let routes = [
       ]
 
     },
+    {
+        path: "/test",
+        component: ()=>import("@/views/fronted/TestVue.vue")
+    }
     // { path: "/home", component: HomeView },
     // { path: "/about", component: AboutView },
     // { path: "/article", component: QueryArticlesView },

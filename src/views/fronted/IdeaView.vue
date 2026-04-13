@@ -103,7 +103,7 @@
 <script setup>
 import { onMounted } from 'vue';
 
-    onMounted(() => { 
+    onMounted(() => {
         // 返回首页演示
         const backBtn = document.getElementById('backHomeBtn');
         if (backBtn) {
@@ -159,7 +159,7 @@ import { onMounted } from 'vue';
                 showToast(`🔬 演示模式：即将进入「${cardTitle}」`);
             });
         });
-    
+
     });
 </script>
 
