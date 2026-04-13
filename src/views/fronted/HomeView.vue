@@ -211,21 +211,29 @@ body.dark .slide-content {
   transition: 0.2s;
   z-index: 10;
 }
-
+:deep(.carousel-btn svg){
+  width: 50%;
+  height: 50%;
+  fill: var(--tech-blue);
+}
 :deep(.carousel-btn:hover) {
   background: var(--tech-blue);
   color: white;
 }
-
+:deep(.carousel-btn svg:hover){
+  fill: white;
+}
 :deep(.btn-prev) {
   left: 1.2rem;
+  transform:translateY(-50%) scaleX(-1);
 }
 
-:deep(.btn-next ){
+:deep(.btn-next){
+  position: absolute;
   right: 1.2rem;
 }
 
-.carousel-dots {
+/*:deep(.carousel-dots) {
   position: absolute;
   bottom: 1rem;
   left: 0;
@@ -248,7 +256,7 @@ body.dark .slide-content {
 :deep(.dot.active) {
   background: var(--tech-blue);
   width: 28px;
-}
+}*/
 
 /* 首页双栏布局 */
 .blog-layout {
@@ -546,11 +554,11 @@ const splideOptions = ref({
   pagination: true,  // 显示分页圆点
   arrows: true,      // 显示左右箭头
   drag: true,        // 允许拖拽
-  // classes:{
-  //   arrow:'carousel-btn',
-  //   prev  :'btn_prev',
-  //   next  :'btn_next',
-  // }
+  classes:{
+    arrow:'carousel-btn',
+    prev  :'btn-prev',
+    next  :'btn-next'
+  }
 });
 //轮播图
 let slide_contents = reactive([])
