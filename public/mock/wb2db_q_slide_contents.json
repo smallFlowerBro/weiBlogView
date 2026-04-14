@@ -1,0 +1,28 @@
+{
+  "code": "0",
+  "msg" : "",
+  "data": {
+      "details": [
+        {
+          "main_title":"Vue 3 组合式核心",
+          "sub_title":"响应式原理与复用逻辑深度解析",
+          "bg_url":"https://picsum.photos/id/20/1920/640",
+          "more_btn":"探索技术",
+          "more_btn_icon":"fa-arrow-right"
+        },
+        {
+          "main_title":"现代前端工程化",
+          "sub_title":"Vite + TypeScript 最佳实践",
+          "bg_url":"https://picsum.photos/id/26/1920/640",
+          "more_btn":"深入工程",
+          "more_btn_icon":"fa-tools"
+        },{
+          "main_title":"科技与设计共生",
+          "sub_title":"响应式原理与复用逻辑深度解析",
+          "bg_url":"https://picsum.photos/id/15/1920/640",
+          "more_btn":"设计灵感",
+          "more_btn_icon":"fa-palette"
+        }
+      ]
+  }
+}

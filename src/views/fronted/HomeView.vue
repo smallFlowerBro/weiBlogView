@@ -543,6 +543,8 @@ import {ref, onMounted, reactive} from "vue"
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 // 引入样式 (Splide 只有一个 CSS 文件，不需要像 Swiper 那样拆分引入)
 import '@splidejs/vue-splide/css';
+import fetch from "@/lib/fetch/index.js";
+import api from "@/api.js";
 
 // 配置项 (比 Swiper 直观太多)
 const splideOptions = ref({
@@ -560,38 +562,29 @@ const splideOptions = ref({
     next  :'btn-next'
   }
 });
+
 //轮播图
-let slide_contents = reactive([])
+let slide_contents = ref([])
+
+
+const getSlideContent = function (){
+  fetch.post(api.wb2db_q_slide_contents,{
+  }).then((result)=>{
+    slide_contents.value = result.details
+
+    console.log(slide_contents)
+  },(error)=>{
+    console.log(error)
+  })
+
+}
 
 const init  = function(){
-    slide_contents = getSlideContent();
-
+  getSlideContent();
 }
 
-const getSlideContent= function (){
-  return [
-    {
-      main_title:"Vue 3 组合式核心",
-      sub_title:"响应式原理与复用逻辑深度解析",
-      bg_url:"https://picsum.photos/id/20/1920/640",
-      more_btn:"探索技术",
-      more_btn_icon:"fa-arrow-right"
-    },
-    {
-      main_title:"现代前端工程化",
-      sub_title:"Vite + TypeScript 最佳实践",
-      bg_url:"https://picsum.photos/id/26/1920/640",
-      more_btn:"深入工程",
-      more_btn_icon:"fa-tools"
-    },{
-      main_title:"科技与设计共生",
-      sub_title:"响应式原理与复用逻辑深度解析",
-      bg_url:"https://picsum.photos/id/15/1920/640",
-      more_btn:"设计灵感",
-      more_btn_icon:"fa-palette"
-    }
-  ];
-}
+
+
 init()
 
 </script>
