@@ -1,51 +1,42 @@
 import { createRouter,createWebHashHistory } from "vue-router";
 
-//引入页面视图
-//博客客户端框架页
-import IndexView from "@/views/fronted/IndexView.vue";
-//首页
-import HomeView from "@/views/fronted/HomeView.vue";
-//关于页面
-import AboutView from "@/views/fronted/AboutView.vue";
-//想法页面
-import IdeaView from "@/views/fronted/IdeaView.vue";
-//文章页面
-import ArticleView from "@/views/fronted/ArticleView.vue";
-import QueryArticlesView from "@/views/fronted/QueryArticlesView.vue";
-//旅游
-import TravelNoteView from "@/views/fronted/TravelNoteView.vue";
-//
+
 //路由表
 let routes = [
 
 
     { path: "/",
-      component: IndexView,
+      component: ()=>import("@/views/fronted/IndexView.vue"),
       children:[
           {
+              //首页
               path:"",
-              component:HomeView
+              component:()=>import("@/views/fronted/HomeView.vue")
           },
           {
+              //首页
               path:"/home",
-              component:HomeView
+              component:()=>import("@/views/fronted/HomeView.vue")
           },
           {
+              //关于
               path: "/about",
-              component: AboutView
+              component: ()=>import("@/views/fronted/AboutView.vue")
           },
           {
-              path: "/article",
-              component: QueryArticlesView
+              //全部文章
+              path: "/articles",
+              component: ()=>import("@/views/fronted/QueryArticlesView.vue")
           },
-          // { path: "/article", component: ArticleView },
           {
+              //旅游历程
               path: "/travelNote",
-              component: TravelNoteView
+              component: ()=>import("@/views/fronted/TravelNoteView.vue")
           },
           {
+              //
               path: "/idea",
-              component: IdeaView
+              component: ()=>import("@/views/fronted/IdeaView.vue")
           }
       ]
 
@@ -53,13 +44,11 @@ let routes = [
     {
         path: "/test",
         component: ()=>import("@/views/fronted/TestVue.vue")
+    },
+    {
+        path: "/admin",
+
     }
-    // { path: "/home", component: HomeView },
-    // { path: "/about", component: AboutView },
-    // { path: "/article", component: QueryArticlesView },
-    // // { path: "/article", component: ArticleView },
-    // { path: "/travelNote", component: TravelNoteView },
-    // { path: "/idea", component: IdeaView }
 
 ]
 

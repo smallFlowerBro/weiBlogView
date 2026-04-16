@@ -1,12 +1,13 @@
 <template>
+  <!-- 轮播内容 开始  -->
   <section class="carousel-section">
     <div class="carousel-container">
       <div class="carousel-slides" id="carouselSlides">
-        <Splide :options="splideOptions" class="w-100 h-100">
+        <el-skeleton :loading="slide_contents.is_loading">
+        <Splide v-if="slide_contents.details.length>0"  :options="splideOptions" class="w-100 h-100">
           <!-- 循环渲染 Slide -->
-          <SplideSlide class="w-100" v-for="(item, index) in slide_contents" :key="index">
-            <div class="carousel-slide "
-                 :style="{'background-image': `linear-gradient(145deg,#b2d9ff,#d9eaff),url(${item.bg_url})`,'background-blend-mode': 'overlay' }" style="">
+          <SplideSlide class="w-100" v-for="(item, index) in slide_contents.details" :key="index">
+            <div class="carousel-slide" :style="{'background-image': `linear-gradient(145deg,#b2d9ff,#d9eaff),url(${item.bg_url})`,'background-blend-mode': 'overlay' }" style="">
               <div class="slide-overlay">
                 <div class="slide-content">
                   <h2>{{item.main_title }}</h2>
@@ -17,51 +18,42 @@
             </div>
           </SplideSlide>
         </Splide>
+        <div v-else>暂无数据</div>
+          <template #template>
+            <el-skeleton-item variant="image" style="width: 100%;height: 100%"/>
+          </template>
+        </el-skeleton>
       </div>
     </div>
   </section>
+  <!-- 轮播内容 结束  -->
+
   <main>
     <div class="container">
       <div class="blog-layout">
         <div>
-          <div class="section-header"><h2>最新·技术视野</h2><a href="#">全部文章 <i class="fas fa-arrow-right"></i></a>
+          <div class="section-header"><h2>最新·技术视野</h2><a href="#articles">全部文章 <i class="fas fa-arrow-right"></i></a>
           </div>
+          <el-skeleton :loading = "article_list.is_loading" >
           <div class="posts-grid">
-            <article class="post-card"><img class="card-img" src="https://picsum.photos/id/106/500/240" alt="组合式API">
+            <article v-for="(item,index) in article_list.details"  class="post-card" :key="index">
+              <img class="card-img" :src="item.background_image" :alt="item.category">
               <div class="card-content">
-                <div class="post-meta"><span><i class="far fa-calendar-alt"></i> 2025.04.08</span><span><i
-                    class="far fa-clock"></i> 6 min</span></div>
-                <h3 class="post-title"><a href="#">组合式 API 最佳实践与逻辑复用</a></h3>
-                <p class="post-excerpt">深入理解 composables、响应式原理，构建高复用组件库。</p><a href="#"
-                                                                                                class="read-more">阅读全文
-                <i class="fas fa-arrow-right"></i></a></div>
-            </article>
-            <article class="post-card"><img class="card-img" src="https://picsum.photos/id/169/500/240" alt="CSS科技">
-              <div class="card-content">
-                <div class="post-meta"><span><i class="far fa-calendar-alt"></i> 2025.03.28</span><span><i
-                    class="far fa-clock"></i> 4 min</span></div>
-                <h3 class="post-title"><a href="#">现代 CSS 魔法：容器查询与网格进化</a></h3>
-                <p class="post-excerpt">用纯 CSS 实现玻璃态、动态布局，让界面充满科技呼吸感。</p><a href="#" class="read-more">阅读全文
-                <i class="fas fa-arrow-right"></i></a></div>
-            </article>
-            <article class="post-card"><img class="card-img" src="https://picsum.photos/id/91/500/240" alt="性能优化">
-              <div class="card-content">
-                <div class="post-meta"><span><i class="far fa-calendar-alt"></i> 2025.03.20</span><span><i
-                    class="far fa-clock"></i> 8 min</span></div>
-                <h3 class="post-title"><a href="#">前端性能精讲：从指标到极致调优</a></h3>
-                <p class="post-excerpt">Core Web Vitals、代码分割、预加载策略，让应用秒开。</p><a href="#"
-                                                                                              class="read-more">阅读全文
-                <i class="fas fa-arrow-right"></i></a></div>
-            </article>
-            <article class="post-card"><img class="card-img" src="https://picsum.photos/id/42/500/240" alt="开源贡献">
-              <div class="card-content">
-                <div class="post-meta"><span><i class="far fa-calendar-alt"></i> 2025.03.10</span><span><i
-                    class="far fa-clock"></i> 5 min</span></div>
-                <h3 class="post-title"><a href="#">从零参与开源：我的第一个 PR 之旅</a></h3>
-                <p class="post-excerpt">Git 协作、社区沟通，真实经验分享，拥抱开源世界。</p><a href="#" class="read-more">阅读全文
-                <i class="fas fa-arrow-right"></i></a></div>
+                <div class="post-meta"><span><i class="far fa-calendar-alt"></i>&nbsp;{{item.publish_date}}</span><span><i
+                    class="far fa-clock"></i> {{item.read_time}}</span></div>
+                <h3 class="post-title"><a href="#">{{item.main_title}}</a></h3>
+                <p class="post-excerpt">{{item.sub_title}}</p>
+                <a href="#" class="read-more">阅读全文<i class="fas fa-arrow-right"></i></a>
+              </div>
             </article>
           </div>
+          <template #template>
+            <el-skeleton-item variant="rect" style="width: 100%;height: 500px">
+              <el-skeleton-item variant="image" class="w-100 h-40"></el-skeleton-item>
+              <el-skeleton-item variant="text" class="w-100 h-60 "></el-skeleton-item>
+            </el-skeleton-item>
+          </template>
+          </el-skeleton>
         </div>
         <aside class="sidebar">
           <div class="sidebar-card author-info">
@@ -563,24 +555,46 @@ const splideOptions = ref({
   }
 });
 
-//轮播图
-let slide_contents = ref([])
+// 轮播图
+let slide_contents = reactive({
+  //正在加载
+  is_loading:true,
+  //是否有内容
+  details:[]
+});
+// 文章列表
+let article_list = reactive({
+  //正在加载
+  is_loading:true,
+  //是否有内容
+  details:[]
+})
 
-
+//获取轮播内容
 const getSlideContent = function (){
   fetch.post(api.wb2db_q_slide_contents,{
   }).then((result)=>{
-    slide_contents.value = result.details
-
-    console.log(slide_contents)
+    slide_contents.is_loading = false
+    slide_contents.details = result.details
   },(error)=>{
     console.log(error)
   })
-
 }
-
+//获取文章内容
+const getArticles =function (){
+  fetch.post(api.wb2db_q_article_content,{
+  }).then((result)=>{
+      article_list.is_loading = false
+      article_list.details = result.details
+  },(error)=>{
+    console.log(error)
+  })
+}
 const init  = function(){
-  getSlideContent();
+
+    getSlideContent();
+
+    getArticles()
 }
 
 
