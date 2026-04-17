@@ -9,11 +9,11 @@
       </div>
 
       <div class="nav-menu">
-        <router-link to="home">首页</router-link>
-        <router-link to="articles">文章</router-link>
-        <router-link to="idea">灵感库</router-link>
-        <router-link to="travelNote">旅行</router-link>
-        <router-link to="about">关于</router-link>
+        <router-link to="/home">首页</router-link>
+        <router-link to="/articles">文章</router-link>
+        <router-link to="/idea">灵感库</router-link>
+        <router-link to="/travelNote">旅行</router-link>
+        <router-link to="/about">关于</router-link>
         <button class="theme-toggle" id="themeToggle" @click.prevent="changeSkin"><i class="fas" :class="skinIcon"></i>
         </button>
       </div>

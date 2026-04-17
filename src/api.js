@@ -6,10 +6,15 @@ let apiConfig={
         api:"/api/article/hot",
         mock:"/mock/wb2db_q_slide_contents.json"
     },
+    // 查询文章列表
+    wb2db_q_article_list:{
+        api:"/api/article/wb2db_q_article_list",
+        mock:"/mock/wb2db_q_article_list.json"
+    },
     // 查询文章内容
-    wb2db_q_article_content:{
-        api:"/api/article/wb2db_q_article_content",
-        mock:"/mock/wb2db_q_article_content.json"
+    web2db_q_article_detail:{
+        api:"/api/article/web2db_q_article_detail",
+        mock:"/mock/web2db_q_article_detail.json"
     }
 
 

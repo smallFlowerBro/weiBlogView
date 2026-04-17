@@ -32,7 +32,8 @@
     <div class="container">
       <div class="blog-layout">
         <div>
-          <div class="section-header"><h2>最新·技术视野</h2><a href="#articles">全部文章 <i class="fas fa-arrow-right"></i></a>
+          <div class="section-header"><h2>最新·技术视野</h2>
+            <router-link to="/articles">全部文章 <i class="fas fa-arrow-right"></i></router-link>
           </div>
           <el-skeleton :loading = "article_list.is_loading" >
           <div class="posts-grid">
@@ -43,7 +44,7 @@
                     class="far fa-clock"></i> {{item.read_time}}</span></div>
                 <h3 class="post-title"><a href="#">{{item.main_title}}</a></h3>
                 <p class="post-excerpt">{{item.sub_title}}</p>
-                <a href="#" class="read-more">阅读全文<i class="fas fa-arrow-right"></i></a>
+                <router-link class="read-more" :to="{name:'Article',params:{id:index,key:index}}">阅读全文<i class="fas fa-arrow-right"></i></router-link>
               </div>
             </article>
           </div>
@@ -582,7 +583,7 @@ const getSlideContent = function (){
 }
 //获取文章内容
 const getArticles =function (){
-  fetch.post(api.wb2db_q_article_content,{
+  fetch.post(api.wb2db_q_article_list,{
   }).then((result)=>{
       article_list.is_loading = false
       article_list.details = result.details

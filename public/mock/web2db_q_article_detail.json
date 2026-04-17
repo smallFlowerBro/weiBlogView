@@ -1,0 +1,11 @@
+{
+  "code": "0",
+  "msg" : "",
+  "data": {
+    "main_title": "Splide",
+    "sub_title": "轻量级且强大的滑块库",
+    "publish_time": "2026.04.17",
+    "read_time": "6 min",
+    "text":"# Splide：轻量级且强大的滑块库\n\nSplide 是一个轻量级、可扩展且可访问的 JavaScript 滑块库，适用于构建轮播、画廊和滑块。它不依赖任何外部库，并且完全免费。\n\n## 为什么选择 Splide？\n\n- **轻量级**：核心库非常小巧，加载速度快。\n- **功能强大**：支持多种滑块类型，如滑动、淡入淡出、循环等。\n- **可访问性**：内置键盘导航和 ARIA 属性，确保所有用户都能使用。\n- **易于使用**：API 简洁，文档清晰，上手简单。\n- **高度可定制**：提供丰富的选项和事件，满足各种需求。\n\n## 安装\n\n你可以通过 npm 或 yarn 安装 Splide：\n\n```bash\nnpm install @splidejs/splide"
+  }
+}

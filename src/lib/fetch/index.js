@@ -85,7 +85,7 @@ function post (url,params){
         }).catch((error)=>{
             reject({
                 code:"-1",
-                msg: ""
+                msg: error?.msg||"请求出错"
             })
         })
     })
@@ -103,9 +103,24 @@ function get(url,params){
 
         let method = axios_instance.get;
         method(url,params).then((result)=>{
-            resolve(result);
+            if(result.code == "0"){
+                resolve(result.data)
+            }else{
+                reject({
+                    code : result.code,
+                    msg  : result.msg
+                })
+            }
         },(error)=>{
-            reject(error);
+            reject({
+                code: -1,
+                msg:error.toString()||"请求异常"
+            });
+        }).catch(error=>{
+            reject({
+                code:"-1",
+                msg: error?.msg||"请求出错"
+            })
         })
     })
 }

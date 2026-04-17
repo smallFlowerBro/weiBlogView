@@ -1,4 +1,4 @@
-import { createRouter,createWebHashHistory } from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 
 //路由表
@@ -29,6 +29,13 @@ let routes = [
               component: ()=>import("@/views/fronted/QueryArticlesView.vue")
           },
           {
+              //文章
+              path: "/article/:id/:key",
+              name: "Article",
+              component:()=>import("@/views/fronted/ArticleView.vue")
+
+          },
+          {
               //旅游历程
               path: "/travelNote",
               component: ()=>import("@/views/fronted/TravelNoteView.vue")
@@ -53,7 +60,7 @@ let routes = [
 ]
 
 const router = createRouter({
-    history : createWebHashHistory(),
+    history : createWebHistory(),
     routes  : routes
 })
 

@@ -318,24 +318,84 @@ export function useMouseTracker() {
 </style>
 
 <script setup>
-import {onMounted} from 'vue';
 
-onMounted(() => { // 添加主题切换功能
-  const backBtn = document.getElementById('backHomeBtn');
-  if (backBtn) backBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('演示模式：返回首页');
-  });
-  const tocLinks = document.querySelectorAll('.toc-list a');
-  tocLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href').substring(1);
-      const el = document.getElementById(targetId);
-      if (el) el.scrollIntoView({behavior: 'smooth'});
+  import {onMounted} from 'vue';
+  import {useRoute} from "vue-router";
+  //请求相关
+  import fetch from "@/lib/fetch/index.js";
+  import api from "@/api.js";
+  //markdown相关
+  import MarkdownIt from 'markdown-it'
+  import anchor  from 'markdown-it-anchor'
+  import hljs from "highlight.js";
+  import toc from 'markdown-it-toc-done-right';
+
+
+  let route = useRoute();
+  let params = route.params;
+  console.log(params)
+
+  const getArticleDetail = async function (){
+    return await fetch.post(api.web2db_q_article_detail,{
+    }).then((result)=>{
+      return result
+    },(error)=>{
+      console.log(error)
+      return
+    })
+  }
+
+
+  const renderArticle = function (article){
+    let md  = new MarkdownIt({
+      html: true,        // 允许HTML标签
+      linkify: true,     // 自动识别URL
+      typographer: true, // 启用一些语言中性替换
+      breaks: true       // 将换行符转换为<br>
+
+    })
+    md.use(anchor,{
+      level: [1, 2, 3],  // 生成锚点的标题级别
+      permalink: false,    // 不显示永久链接
+      slugify:()=>{
+        return
+      }
     });
-  });
+    // md.use(toc,{
+    //   containerClass: 'table-of-contents',
+    //   listType: 'ul',
+    //   level: [1, 2, 3]
+    // })
+    let html =md.render(article.text)
+    console.log(html)
 
-})
+
+
+  }
+
+
+  const init = function (){
+
+    getArticleDetail().then(renderArticle)
+  }
+
+  init();
+// onMounted(() => { // 添加主题切换功能
+//   const backBtn = document.getElementById('backHomeBtn');
+//   if (backBtn) backBtn.addEventListener('click', (e) => {
+//     e.preventDefault();
+//     alert('演示模式：返回首页');
+//   });
+//   const tocLinks = document.querySelectorAll('.toc-list a');
+//   tocLinks.forEach(link => {
+//     link.addEventListener('click', (e) => {
+//       e.preventDefault();
+//       const targetId = link.getAttribute('href').substring(1);
+//       const el = document.getElementById(targetId);
+//       if (el) el.scrollIntoView({behavior: 'smooth'});
+//     });
+//   });
+//
+// })
 
 </script>
