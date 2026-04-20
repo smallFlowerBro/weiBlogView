@@ -4,14 +4,16 @@
       <div class="article-layout">
         <aside class="toc-sidebar">
           <div class="toc-title">📑 文章目录</div>
-          <ul class="toc-list">
-            <li class="toc-h2"><a href="#why">为什么需要组合式 API？</a></li>
-            <li class="toc-h2"><a href="#reusable">创建可复用的组合式函数</a></li>
-            <li class="toc-h2"><a href="#reactivity">响应式原理与性能优化</a></li>
-            <li class="toc-h2"><a href="#architecture">大型项目中的架构模式</a></li>
-            <li class="toc-h3"><a href="#vs-mixins">组合式函数 vs. Mixins</a></li>
-            <li class="toc-h2"><a href="#summary">总结</a></li>
-          </ul>
+          <el-skeleton :loading="is_loading">
+            <ul class="toc-list">
+              <li v-for="(item,index) in toc_list" :class="'toc-h'+item.level" :key="index"><a
+                  :href="'#'+item.id">{{ item.title }}</a></li>
+            </ul>
+            <template #template>
+              <el-skeleton-item variant="rect" class="w-100 h-100"></el-skeleton-item>
+            </template>
+          </el-skeleton>
+
         </aside>
         <article class="article-content">
           <div class="article-header">
@@ -19,36 +21,13 @@
                 class="far fa-clock"></i> 阅读约 8 分钟</span><span><i class="fas fa-tag"></i> Vue 3 · 组合式 API</span>
             </div>
             <h1 class="article-title">组合式 API 最佳实践：从逻辑复用到可维护架构</h1></div>
-          <img class="article-cover" src="https://picsum.photos/id/106/800/400" alt="Vue 组合式 API">
-          <div class="article-body"><p>Vue 3 的组合式 API（Composition
-            API）为组件逻辑复用和组织带来了革命性的变化。本文将深入探讨如何优雅地使用组合式函数、响应式原理以及大型项目中的架构设计。</p>
-            <h2 id="why">为什么需要组合式 API？</h2>
-            <p>在 Options API 中，逻辑分散在 data、methods、computed 等选项中，当组件变得复杂时，同一功能的代码被迫分散，导致难以维护。组合式
-              API 允许我们按逻辑功能聚合代码，提升可读性和可复用性。</p>
-            <h2 id="reusable">创建可复用的组合式函数</h2>
-            <p>组合式函数是利用 Vue 响应式系统封装有状态逻辑的函数。命名习惯上使用 <code>use</code> 作为前缀。</p>
-            <pre><code>// useMouseTracker.js
-import { ref, onMounted, onUnmounted } from 'vue'
 
-export function useMouseTracker() {
-  const x = ref(0)
-  const y = ref(0)
-  const update = (e) => { x.value = e.pageX; y.value = e.pageY }
-  onMounted(() => window.addEventListener('mousemove', update))
-  onUnmounted(() => window.removeEventListener('mousemove', update))
-  return { x, y }
-}</code></pre>
-            <h2 id="reactivity">响应式原理与性能优化</h2>
-            <p>组合式 API 基于 <code>ref</code> 和 <code>reactive</code> 实现细粒度响应式追踪。需要注意避免过度解构导致响应式丢失，推荐使用
-              <code>toRefs</code> 保持响应式连接。</p>
-            <blockquote>“组合式 API 的最大价值在于让逻辑关注点分离，而不是关注选项类型。” —— Vue 核心团队</blockquote>
-            <h2 id="architecture">大型项目中的架构模式</h2>
-            <p>将不同领域的组合式函数放在独立的文件中（如 <code>composables/useAuth</code>、<code>useCart</code>），然后在视图层组合调用。
-            </p>
-            <h3 id="vs-mixins">组合式函数 vs. Mixins</h3>
-            <p>Mixins 存在命名冲突、隐式依赖等问题，而组合式函数通过显式返回值提供了更好的类型安全和可预测性。</p>
-            <h2 id="summary">总结</h2>
-            <p>组合式 API 是 Vue 3 最强大的特性之一，它让代码更加模块化、可测试，并且易于团队协作。</p></div>
+          <img class="article-cover" src="https://picsum.photos/id/106/800/400" alt="Vue 组合式 API">
+          <div class="article-body">
+
+            <div v-if="is_loading"></div>
+            <div v-else v-html="md_content"></div>
+          </div>
           <div class="article-footer">
             <div class="tag-cloud"><a href="#" class="tag">#Vue3</a><a href="#" class="tag">#CompositionAPI</a><a
                 href="#" class="tag">#TypeScript</a><a href="#" class="tag">#前端架构</a></div>
@@ -175,25 +154,25 @@ export function useMouseTracker() {
   border: 1px solid var(--border-light);
 }
 
-.article-body h2 {
+:deep(.article-body h2) {
   font-size: 1.7rem;
   margin: 1.8rem 0 1rem;
   border-left: 4px solid var(--tech-blue);
   padding-left: 1rem;
 }
 
-.article-body h3 {
+:deep(.article-body h3) {
   font-size: 1.3rem;
   margin: 1.5rem 0 0.8rem;
 }
 
-.article-body p {
+:deep(.article-body p ) {
   margin-bottom: 1.2rem;
   line-height: 1.7;
   color: var(--text-secondary);
 }
 
-.article-body code {
+:deep(.article-body code) {
   background: var(--code-bg);
   padding: 0.2rem 0.4rem;
   border-radius: 6px;
@@ -202,7 +181,7 @@ export function useMouseTracker() {
   border: 1px solid var(--code-border);
 }
 
-.article-body pre {
+:deep(.article-body pre ) {
   background: var(--code-bg);
   padding: 1rem;
   border-radius: 12px;
@@ -211,13 +190,13 @@ export function useMouseTracker() {
   border: 1px solid var(--code-border);
 }
 
-.article-body pre code {
+:deep(.article-body pre code) {
   background: none;
   padding: 0;
   border: none;
 }
 
-.article-body blockquote {
+:deep(.article-body blockquote) {
   border-left: 4px solid var(--tech-blue);
   background: var(--bg-soft);
   padding: 1rem 1.5rem;
@@ -226,12 +205,214 @@ export function useMouseTracker() {
   font-style: italic;
 }
 
-.article-footer {
+:deep(.article-footer) {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-light);
 }
+/* 1. 无序列表基础样式 */
+:deep(.article-body ul) {
+  margin: 1.2rem 0 1.2rem 1.8rem;
+  padding-left: 0.5rem;
+  list-style: none;          /* 移除原生圆点，使用自定义图标 */
+}
 
+/* 列表项 */
+:deep(.article-body li) {
+  position: relative;
+  margin-bottom: 0.6rem;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+/* 自定义科技感圆点（带光晕） */
+:deep(.article-body li::before) {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 6px;
+  height: 6px;
+  background: var(--tech-blue);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--tech-glow);
+  transition: all 0.2s ease;
+}
+
+/* 悬停时圆点放大 + 文字微移 */
+:deep(.article-body li:hover::before) {
+  transform: scale(1.3);
+  background: var(--tech-blue-light);
+  box-shadow: 0 0 0 3px var(--tech-glow);
+}
+
+:deep(.article-body li:hover){
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+/* ========= 2. 有序列表 (数字科技风格) ========= */
+:deep(.article-body ol) {
+  margin: 1.2rem 0 1.2rem 1.8rem;
+  padding-left: 0.5rem;
+  list-style: none;
+  counter-reset: tech-counter;
+}
+
+:deep(.article-body ol li) {
+  counter-increment: tech-counter;
+  position: relative;
+  margin-bottom: 0.7rem;
+  padding-left: 1.8rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+:deep(.article-body ol li::before)
+ {
+  content: counter(tech-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.3rem;
+  height: 1.3rem;
+  background: var(--bg-soft);
+  color: var(--tech-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+  line-height: 1.3rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+}
+
+:deep(.article-body ol li:hover::before){
+  background: var(--tech-blue);
+  color: white;
+  border-color: var(--tech-blue);
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px var(--tech-glow);
+}
+
+/* ========= 3. 嵌套列表（二级列表缩进 + 特殊样式） ========= */
+:deep(.article-body ul ul,
+.article-body ol ul){
+  margin: 0.4rem 0 0.4rem 1.2rem;
+}
+
+:deep(.article-body ul ul li::before ){
+  width: 4px;
+  height: 4px;
+  top: 0.7rem;
+  background: var(--text-muted);
+  box-shadow: none;
+}
+
+:deep(.article-body ul ul li:hover::before){
+  transform: scale(1.2);
+  background: var(--tech-blue);
+}
+
+/* 二级有序列表继承但微调数字样式 */
+:deep(.article-body ol ol li::before) {
+  background: var(--bg-card);
+  font-size: 0.7rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  line-height: 1.2rem;
+  border: 1px solid var(--border-light);
+}
+
+/* ========= 4. 科技感任务列表样式 (可选，用于 TODO 风格) ========= */
+:deep(.article-body ul.task-list ){
+  list-style: none;
+  margin-left: 0.5rem;
+}
+
+:deep(.article-body ul.task-list li){
+  padding-left: 1.8rem;
+}
+
+:deep(.article-body input[type="checkbox"]) {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid var(--tech-blue);
+  border-radius: 3px;
+  background: var(--bg-soft);
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+  top: -1px;
+}
+
+:deep(.article-body input[type="checkbox"]:checked){
+  background: var(--tech-blue);
+  box-shadow: 0 0 4px var(--tech-blue);
+  border-color: var(--tech-blue);
+}
+
+:deep(.article-body input[type="checkbox"]:checked::after) {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 0.7rem;
+  left: 2px;
+  top: -1px;
+}
+
+/* ========= 5. 响应式适配 ========= */
+@media (max-width: 768px) {
+  :deep(.article-body ul,
+  .article-body ol)
+   {
+    margin-left: 1rem;
+  }
+
+  :deep(.article-body li){
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.article-body li::before) {
+    top: 0.55rem;
+  }
+}
+
+/* ========= 6. 深色模式自动适配（无需额外代码，变量已生效） ========= */
+/* 深色模式下，列表文字颜色、圆点、边框均会随主题变量自动变化 */
+
+/* ========= 7. 可选：列表区块增加细微分割线 ========= */
+:deep(.article-body ul:not(:first-child),
+.article-body ol:not(:first-child) ){
+  margin-top: 1rem;
+}
+
+/* 列表内部链接样式（可选） */
+:deep(.article-body li a){
+  color: var(--tech-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+  transition: 0.2s;
+}
+
+:deep(.article-body li a:hover) {
+  border-bottom-color: var(--tech-blue);
+  color: var(--tech-blue-light);
+}
+
+/* ========= 8. 大列表、紧凑模式（用于代码块附近的列表） ========= */
+:deep(.article-body.compact-list li){
+  margin-bottom: 0.3rem;
+}
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -319,67 +500,86 @@ export function useMouseTracker() {
 
 <script setup>
 
-  import {onMounted} from 'vue';
-  import {useRoute} from "vue-router";
-  //请求相关
-  import fetch from "@/lib/fetch/index.js";
-  import api from "@/api.js";
-  //markdown相关
-  import MarkdownIt from 'markdown-it'
-  import anchor  from 'markdown-it-anchor'
-  import hljs from "highlight.js";
-  import toc from 'markdown-it-toc-done-right';
+import {onMounted, reactive, ref} from 'vue';
+import {useRoute} from "vue-router";
+//请求相关
+import fetch from "@/lib/fetch/index.js";
+import api from "@/api.js";
+import UUIDManager from "@/lib/utils/index.js";
+//markdown相关
+import MarkdownIt from 'markdown-it'
+import anchor from 'markdown-it-anchor'
+import hljs from "highlight.js";
+import markdownItToc from "@/plugin/markdownItToc.js";
+
+// 前面路由传过来的参数
+let route = useRoute();
+let params = route.params;
+//
+let md = null;
+//是否加载中
+let is_loading = ref(true)
+//目录
+let toc_list = ref([])
+let md_content = ref("");
 
 
-  let route = useRoute();
-  let params = route.params;
-  console.log(params)
-
-  const getArticleDetail = async function (){
-    return await fetch.post(api.web2db_q_article_detail,{
-    }).then((result)=>{
-      return result
-    },(error)=>{
-      console.log(error)
-      return
-    })
-  }
+const getArticleDetail = async function () {
+  return await fetch.post(api.web2db_q_article_detail, {
+    id: params.id
+  }).then((result) => {
+    return result
+  }, (error) => {
+    console.log(error)
+    return
+  })
+}
 
 
-  const renderArticle = function (article){
-    let md  = new MarkdownIt({
-      html: true,        // 允许HTML标签
-      linkify: true,     // 自动识别URL
-      typographer: true, // 启用一些语言中性替换
-      breaks: true       // 将换行符转换为<br>
+const renderArticle = function (article) {
+  console.log(article)
+  let html = md.render(article.text)
+  console.log(html)
+  md_content.value = html
+  is_loading.value = false
+  toc_list.value = md.toc
+}
 
-    })
-    md.use(anchor,{
-      level: [1, 2, 3],  // 生成锚点的标题级别
-      permalink: false,    // 不显示永久链接
-      slugify:()=>{
-        return
+
+const init = function () {
+  md = new MarkdownIt({
+    html: true,        // 允许HTML标签
+    linkify: true,     // 自动识别URL
+    typographer: true, // 启用一些语言中性替换
+    breaks: true,       // 将换行符转换为<br>
+    highlight: function (str, lang) {
+      // 如果指定了语言且 highlight.js 支持该语言
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          // 返回高亮后的 HTML
+          return hljs.highlight(str, {language: lang}).value
+        } catch (__) {
+        }
       }
-    });
-    // md.use(toc,{
-    //   containerClass: 'table-of-contents',
-    //   listType: 'ul',
-    //   level: [1, 2, 3]
-    // })
-    let html =md.render(article.text)
-    console.log(html)
+      // 如果没有指定语言或语言不支持，使用默认转义
+      return md.utils.escapeHtml(str)
+    }
+  })
+  // 目录生成锚点
+  md.use(anchor, {
+    level: [1, 2, 3],  // 生成锚点的标题级别
+    permalink: false,    // 不显示永久链接
+    slugify: () => {
+      return UUIDManager.v4()
+    }
+  });
+  // 抽取目录
+  md.use(markdownItToc, {level: [1, 2, 3]});
+  //获取数据
+  getArticleDetail().then(renderArticle)
+}
 
-
-
-  }
-
-
-  const init = function (){
-
-    getArticleDetail().then(renderArticle)
-  }
-
-  init();
+init();
 // onMounted(() => { // 添加主题切换功能
 //   const backBtn = document.getElementById('backHomeBtn');
 //   if (backBtn) backBtn.addEventListener('click', (e) => {
