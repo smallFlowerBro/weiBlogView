@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>墨客 · 作者后台 | 创作登录</title>
+    <!-- 字体与图标库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #e8f0fe 0%, #d9e8ff 100%);
+            position: relative;
+        }
+
+        /* 动态粒子背景（层次感） */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* 左右分栏主容器 */
+        .login-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========= 左侧：插画区域（层次感配色） ========= */
+        .illustration-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.15) 0%, rgba(114, 9, 183, 0.08) 100%);
+            backdrop-filter: blur(4px);
+            border-right: 1px solid rgba(67, 97, 238, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 装饰性色块 */
+        .illustration-panel::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.2), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .illustration-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .illustration {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 2rem;
+        }
+
+        .illustration svg {
+            width: 100%;
+            height: auto;
+            max-width: 420px;
+            filter: drop-shadow(0 10px 20px rgba(67, 97, 238, 0.2));
+        }
+
+        .tagline {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .tagline h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4361ee, #f59e0b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline p {
+            color: #4a5568;
+            font-size: 0.85rem;
+            max-width: 280px;
+        }
+
+        /* ========= 右侧：登录表单区域（层次感） ========= */
+        .login-panel {
+            flex: 0.9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.4) 100%);
+            backdrop-filter: blur(8px);
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 2rem;
+            border: 1px solid rgba(67, 97, 238, 0.25);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255,255,255,0.5) inset;
+            width: 100%;
+            max-width: 420px;
+            padding: 2.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 30px 50px rgba(67, 97, 238, 0.12);
+            border-color: rgba(67, 97, 238, 0.4);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #4361ee, #7209b7);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .login-avatar i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .login-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e293b, #4361ee);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .login-header p {
+            font-size: 0.85rem;
+            color: #6c8eae;
+            margin-top: 0.3rem;
+        }
+
+        /* 表单样式 */
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        .input-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 1rem;
+            color: #4361ee;
+            font-size: 1rem;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.8rem;
+            background: #f8fafc;
+            border: 1.5px solid #e2edf2;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            font-family: 'Inter', monospace;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .input-field input:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            background: white;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #8aa9d0;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .extra-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.2rem 0 1.8rem;
+            font-size: 0.8rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            accent-color: #4361ee;
+            width: 16px;
+            height: 16px;
+        }
+
+        .forgot-link {
+            color: #4361ee;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4361ee, #7209b7);
+            border: none;
+            padding: 0.9rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            transition: all 0.25s;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 18px rgba(67, 97, 238, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            color: #8aa9d0;
+            position: relative;
+        }
+
+        .oauth-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .oauth-btn {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 1px solid #e2edf2;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            color: #4a5568;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .oauth-btn:hover {
+            background: linear-gradient(135deg, #eef4ff, #e0eaff);
+            border-color: #4361ee;
+            color: #4361ee;
+            transform: translateY(-2px);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            color: #8aa9d0;
+        }
+
+        /* 错误提示 */
+        .error-message {
+            font-size: 0.7rem;
+            color: #ef4444;
+            margin-top: 0.3rem;
+            padding-left: 0.5rem;
+        }
+
+        .input-field.error input {
+            border-color: #ef4444;
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%,100%{transform:translateX(0)}
+            25%{transform:translateX(-4px)}
+            75%{transform:translateX(4px)}
+        }
+
+        @media (max-width: 900px) {
+            .login-container {
+                flex-direction: column;
+            }
+            .illustration-panel {
+                flex: 0.5;
+                padding: 2rem;
+            }
+            .illustration svg {
+                max-width: 280px;
+            }
+            .tagline h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .illustration-panel {
+                display: none;
+            }
+            .login-panel {
+                flex: 1;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+
+<div class="login-container">
+    <!-- 左侧：插画区域（层次感配色） -->
+    <div class="illustration-panel">
+        <div class="illustration">
+            <svg viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4361ee"/>
+                        <stop offset="100%" stop-color="#7209b7"/>
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f59e0b"/>
+                        <stop offset="100%" stop-color="#f97316"/>
+                    </linearGradient>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#06b6d4"/>
+                        <stop offset="100%" stop-color="#3b82f6"/>
+                    </linearGradient>
+                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#4361ee" flood-opacity="0.25"/>
+                    </filter>
+                </defs>
+                <!-- 背景装饰圆 -->
+                <circle cx="200" cy="160" r="130" fill="url(#grad1)" opacity="0.08"/>
+                <circle cx="200" cy="160" r="90" fill="url(#grad2)" opacity="0.06"/>
+                
+                <!-- 羽毛笔主体 -->
+                <g filter="url(#shadow)">
+                    <path d="M170 180 L220 135 L245 160 L195 205 L170 180Z" fill="url(#grad1)" opacity="0.95"/>
+                    <path d="M220 135 L260 90 L250 70 L210 110 L220 135Z" fill="url(#grad3)" opacity="0.85"/>
+                    <!-- 笔尖 -->
+                    <path d="M260 90 L272 72 L265 65 L253 82 L260 90Z" fill="url(#grad2)"/>
+                </g>
+                
+                <!-- 书写轨迹 -->
+                <path d="M160 200 Q185 225 210 210 Q235 195 260 210 Q280 220 300 210" stroke="url(#grad1)" stroke-width="2.5" fill="none" stroke-dasharray="6 4" opacity="0.7"/>
+                <path d="M150 215 Q175 240 200 225" stroke="url(#grad2)" stroke-width="2" fill="none" opacity="0.5"/>
+                
+                <!-- 星光点缀 -->
+                <circle cx="120" cy="100" r="4" fill="url(#grad2)" opacity="0.8"/>
+                <circle cx="310" cy="80" r="3" fill="url(#grad1)" opacity="0.7"/>
+                <circle cx="330" cy="150" r="3.5" fill="url(#grad3)" opacity="0.6"/>
+                <circle cx="100" cy="170" r="2.5" fill="url(#grad2)" opacity="0.6"/>
+                <circle cx="280" cy="260" r="2" fill="url(#grad1)" opacity="0.5"/>
+                
+                <!-- 纸页效果 -->
+                <rect x="130" y="245" width="140" height="10" rx="5" fill="url(#grad1)" opacity="0.15"/>
+                <rect x="145" y="262" width="110" height="8" rx="4" fill="url(#grad2)" opacity="0.12"/>
+                <rect x="160" y="278" width="80" height="6" rx="3" fill="url(#grad3)" opacity="0.1"/>
+            </svg>
+        </div>
+        <div class="tagline">
+            <h3>书写 · 沉淀 · 生长</h3>
+            <p>用文字雕刻时光，让思想自由流淌</p>
+        </div>
+    </div>
+
+    <!-- 右侧：登录表单 -->
+    <div class="login-panel">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-avatar"><i class="fas fa-feather-alt"></i></div>
+                <h2>作者登录</h2>
+                <p>进入你的创作后台</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>邮箱 / 用户名</label>
+                    <div class="input-field" id="usernameField">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" id="username" placeholder="your@email.com" value="writer@lightvue.com">
+                    </div>
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>密码</label>
+                    <div class="input-field" id="passwordField">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="请输入密码">
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="fas fa-eye-slash"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="extra-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember"> 记住登录
+                    </label>
+                    <a href="#" class="forgot-link" id="forgotPwd">忘记密码?</a>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-arrow-right-to-bracket"></i> 进入后台
+                </button>
+            </form>
+
+            <div class="divider"><span>其他登录方式</span></div>
+            <div class="oauth-buttons">
+                <button class="oauth-btn" id="githubLogin"><i class="fab fa-github"></i> GitHub</button>
+                <button class="oauth-btn" id="googleLogin"><i class="fab fa-google"></i> Google</button>
+            </div>
+            <div class="footer-note">
+                <i class="fas fa-shield-alt"></i> 安全环境 · 创作数据自动备份
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 粒子背景
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2.5 + 0.8,
+                    alpha: Math.random() * 0.3 + 0.1,
+                    speedX: (Math.random() - 0.5) * 0.2,
+                    speedY: (Math.random() - 0.5) * 0.15,
+                    color: Math.random() > 0.6 ? '#4361ee' : '#f59e0b'
+                });
+            }
+        }
+
+        function drawParticles() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, width, height);
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color === '#4361ee' ? `rgba(67, 97, 238, ${p.alpha})` : `rgba(245, 158, 11, ${p.alpha * 0.7})`;
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+            }
+            requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+        resizeCanvas();
+        initParticles();
+        drawParticles();
+
+        // 表单交互
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const usernameField = document.getElementById('usernameField');
+        const passwordField = document.getElementById('passwordField');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const rememberCheck = document.getElementById('remember');
+        const forgotLink = document.getElementById('forgotPwd');
+        const githubBtn = document.getElementById('githubLogin');
+        const googleBtn = document.getElementById('googleLogin');
+
+        function validateForm() {
+            let valid = true;
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            usernameError.textContent = '';
+            passwordError.textContent = '';
+            usernameField.classList.remove('error');
+            passwordField.classList.remove('error');
+            if (!username) {
+                usernameError.textContent = '请输入邮箱或用户名';
+                usernameField.classList.add('error');
+                valid = false;
+            }
+            if (!password) {
+                passwordError.textContent = '请输入密码';
+                passwordField.classList.add('error');
+                valid = false;
+            }
+            return valid;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            if (!validateForm()) return;
+            showToast('✅ 登录成功，欢迎回来 (演示模式)');
+        }
+
+        function saveCredentials() {
+            if (rememberCheck.checked) {
+                localStorage.setItem('writer_user', usernameInput.value.trim());
+                localStorage.setItem('writer_remember', 'true');
+            } else {
+                localStorage.removeItem('writer_user');
+                localStorage.setItem('writer_remember', 'false');
+            }
+        }
+
+        function loadCredentials() {
+            if (localStorage.getItem('writer_remember') === 'true') {
+                usernameInput.value = localStorage.getItem('writer_user') || '';
+                rememberCheck.checked = true;
+            }
+        }
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePasswordBtn.querySelector('i').classList.toggle('fa-eye-slash');
+            togglePasswordBtn.querySelector('i').classList.toggle('fa-eye');
+        });
+
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('📧 重置链接已发送至您的邮箱 (演示)');
+        });
+
+        githubBtn.addEventListener('click', () => showToast('🐙 GitHub 授权登录 (演示)'));
+        googleBtn.addEventListener('click', () => showToast('🔐 Google 账号登录 (演示)'));
+
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.querySelector('.login-btn').addEventListener('click', () => { if (validateForm()) saveCredentials(); });
+        loadCredentials();
+
+        function showToast(msg) {
+            let toast = document.querySelector('.writer-toast');
+            if (toast) toast.remove();
+            toast = document.createElement('div');
+            toast.className = 'writer-toast';
+            toast.textContent = msg;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '28px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = '#4361ee';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 24px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontSize = '0.85rem';
+            toast.style.fontWeight = '500';
+            toast.style.zIndex = '9999';
+            toast.style.boxShadow = '0 8px 20px rgba(67,97,238,0.4)';
+            toast.style.backdropFilter = 'blur(8px)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+    })();
+</script>
+</body>
+</html>

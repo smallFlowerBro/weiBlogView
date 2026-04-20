@@ -4,36 +4,41 @@
       <div class="article-layout">
         <aside class="toc-sidebar">
           <div class="toc-title">📑 文章目录</div>
-          <el-skeleton :loading="is_loading">
+          <el-skeleton :loading="article_info.is_loading">
             <ul class="toc-list">
-              <li v-for="(item,index) in toc_list" :class="'toc-h'+item.level" :key="index"><a
+              <li v-for="(item,index) in article_info.toc_list" :class="'toc-h'+item.level" :key="index"><a
                   :href="'#'+item.id">{{ item.title }}</a></li>
             </ul>
             <template #template>
-              <el-skeleton-item variant="rect" class="w-100 h-100"></el-skeleton-item>
+              <el-skeleton-item variant="rect" class="w-100 " style="height: 200px"></el-skeleton-item>
             </template>
           </el-skeleton>
 
         </aside>
         <article class="article-content">
-          <div class="article-header">
-            <div class="article-meta"><span><i class="far fa-calendar-alt"></i> 2025年04月08日</span><span><i
-                class="far fa-clock"></i> 阅读约 8 分钟</span><span><i class="fas fa-tag"></i> Vue 3 · 组合式 API</span>
+          <el-skeleton :loading="article_info.is_loading">
+            <div class="article-header">
+              <div class="article-meta"><span><i class="far fa-calendar-alt"></i> {{article_info.infos.publish_time}}</span><span><i
+                  class="far fa-clock"></i> 阅读约 {{article_info.infos.read_time}}</span><span><i class="fas fa-tag"></i> {{article_info.infos.main_tag}}</span>
+              </div>
+              <h1 class="article-title">{{article_info.ab_title}}</h1>
             </div>
-            <h1 class="article-title">组合式 API 最佳实践：从逻辑复用到可维护架构</h1></div>
 
-          <img class="article-cover" src="https://picsum.photos/id/106/800/400" alt="Vue 组合式 API">
-          <div class="article-body">
+            <img class="article-cover" :src="article_info.infos.article_cover" :alt="article_info.infos.main_tag">
+            <div class="article-body">
+              <div v-html="article_info.content_html"></div>
+            </div>
+            <div class="article-footer">
+              <div class="tag-cloud"><a href="#" class="tag">#Vue3</a><a href="#" class="tag">#CompositionAPI</a><a
+                  href="#" class="tag">#TypeScript</a><a href="#" class="tag">#前端架构</a></div>
+              <div class="share-buttons"><span><i class="fas fa-share-alt"></i> 分享本文：</span><a href="#"><i
+                  class="fab fa-twitter"></i> Twitter</a><a href="#"><i class="fab fa-weixin"></i> 微信</a></div>
+            </div>
+            <template #template>
+              <el-skeleton-item variant="rect" class="w-100 " style="height: 400px"></el-skeleton-item>
+            </template>
+          </el-skeleton>
 
-            <div v-if="is_loading"></div>
-            <div v-else v-html="md_content"></div>
-          </div>
-          <div class="article-footer">
-            <div class="tag-cloud"><a href="#" class="tag">#Vue3</a><a href="#" class="tag">#CompositionAPI</a><a
-                href="#" class="tag">#TypeScript</a><a href="#" class="tag">#前端架构</a></div>
-            <div class="share-buttons"><span><i class="fas fa-share-alt"></i> 分享本文：</span><a href="#"><i
-                class="fab fa-twitter"></i> Twitter</a><a href="#"><i class="fab fa-weixin"></i> 微信</a></div>
-          </div>
           <div class="comments-section"><h3 style="margin-bottom:1rem;">💬 精彩评论</h3>
             <div class="comment-item">
               <div class="comment-name">@Alex Chen</div>
@@ -517,7 +522,18 @@ let route = useRoute();
 let params = route.params;
 //
 let md = null;
-//是否加载中
+
+//文章
+let article_info = reactive({
+  //是否加载
+  is_loading:true,
+  //目录
+  toc_list:[],
+  //内容信息
+  infos:{},
+  //文章内容
+  content_html:""
+})
 let is_loading = ref(true)
 //目录
 let toc_list = ref([])
@@ -537,12 +553,14 @@ const getArticleDetail = async function () {
 
 
 const renderArticle = function (article) {
-  console.log(article)
-  let html = md.render(article.text)
-  console.log(html)
-  md_content.value = html
-  is_loading.value = false
-  toc_list.value = md.toc
+  if(!article){
+    return;
+  }
+  article_info.content_html =  md.render(article.text)
+  article_info.toc_list = md.toc
+  article_info.is_loading = false;
+  article_info.infos=Object.assign({},article)
+  article_info.ab_title = article.main_title+": "+article.sub_title
 }
 
 

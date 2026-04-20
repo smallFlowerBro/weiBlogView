@@ -53,8 +53,8 @@ let routes = [
         component: ()=>import("@/views/fronted/TestVue.vue")
     },
     {
-        path: "/admin",
-
+        path: "/login",
+        component:()=>import("@/views/admin/LoginView.vue")
     }
 
 ]
