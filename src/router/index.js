@@ -44,6 +44,11 @@ let routes = [
               //
               path: "/idea",
               component: ()=>import("@/views/fronted/IdeaView.vue")
+          },
+          {
+              //
+              path: "/404",
+              component:()=>import("@/views/fronted/NotFundView.vue")
           }
       ]
 
@@ -55,6 +60,11 @@ let routes = [
     {
         path: "/login",
         component:()=>import("@/views/admin/LoginView.vue")
+    },
+    //没有匹配的问题
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: '/404'
     }
 
 ]

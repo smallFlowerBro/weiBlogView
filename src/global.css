@@ -29,7 +29,13 @@ body {
     --line-grad-start: rgba(43,110,240,0.08); 
     --line-grad-end: transparent; 
     --code-bg: #f5f9ff; 
-    --code-border: #e0eaf5; 
+    --code-border: #e0eaf5;
+    --accent: #3b82f6;
+    --accent-glow: #3b82f620;
+    --accent-hover: #1e6fdf;
+    --radius-card: 1.75rem;
+    --radius-btn: 2.5rem;
+    --container-max: 1240px;
 }
  body.green-eco {
      --bg-body: linear-gradient(145deg, #eef7f0 0%, #e6f3ea 100%);  /* 晨雾绿渐变 */
@@ -51,6 +57,7 @@ body {
      --line-grad-end: transparent;                                    /* 渐变终点透明 */
      --code-bg: #f4faf6;                                              /* 代码块极浅绿底 */
      --code-border: #dcecdd;                                          /* 代码框柔绿边线 */
+
  }
  body.dark {
     --bg-body: #0a0f1a;
@@ -70,7 +77,12 @@ body {
     --dot-color: rgba(95,158,255,0.2); 
     --line-grad-start: rgba(95,158,255,0.1);
     --code-bg: #0f1824; 
-    --code-border: #253545; 
+    --code-border: #253545;
+     --accent: #5f9eff;
+     --accent-glow: #5f9eff20;
+     --radius-card: 1.75rem;
+     --radius-btn: 2.5rem;
+     --container-max: 1240px;
 }
 body {
     background: var(--bg-body); 

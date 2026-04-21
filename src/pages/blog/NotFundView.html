@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>404 · 页面未找到 | 流光志博客</title>
+    <!-- 字体与图标库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fbfdfc;
+            color: #1a2c3e;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.2s ease;
+        }
+
+        /* 主题变量 (浅色/深色) 与首页完全一致 */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-soft: #f0f4f9;
+            --text-primary: #0b2b3d;
+            --text-secondary: #2c4b66;
+            --text-muted: #6c8eae;
+            --border-light: #e6edf4;
+            --accent: #3b82f6;
+            --accent-glow: #3b82f620;
+            --accent-hover: #1e6fdf;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);
+            --shadow-sm: 0 6px 14px -6px rgba(0,0,0,0.05);
+            --shadow-md: 0 18px 28px -10px rgba(0,0,0,0.08);
+            --shadow-hover: 0 28px 36px -14px rgba(0,0,0,0.12);
+            --radius-card: 1.75rem;
+            --radius-btn: 2.5rem;
+            --container-max: 1240px;
+        }
+
+        body.dark {
+            --bg-body: #0a0f16;
+            --bg-surface: #111927;
+            --bg-card: #131e2c;
+            --bg-soft: #0f1824;
+            --text-primary: #eef5ff;
+            --text-secondary: #b9d0f0;
+            --text-muted: #7e95b0;
+            --border-light: #253545;
+            --accent: #5f9eff;
+            --accent-glow: #5f9eff20;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-sm: 0 6px 14px -6px rgba(0,0,0,0.5);
+            --shadow-md: 0 18px 28px -10px rgba(0,0,0,0.6);
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+
+        /* 点阵背景 + 科技小路装饰 (与首页一致) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 2px 2px, rgba(59,130,246,0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .tech-line {
+            position: fixed;
+            bottom: 10%;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .tech-line2 {
+            top: 20%;
+            left: -30px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%);
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 统一版心 (与首页一致) */
+        .container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========= 头部导航 (完全复用首页样式) ========= */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(255,255,255,0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(203, 213, 225, 0.4);
+            transition: all 0.2s;
+        }
+        body.dark .site-header {
+            background-color: rgba(17, 25, 39, 0.8);
+            border-bottom-color: rgba(51, 65, 85, 0.5);
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            background: linear-gradient(145deg, var(--accent), #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 2.2rem;
+            align-items: center;
+        }
+        .nav-menu a {
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+        .nav-menu a:hover {
+            color: var(--accent);
+        }
+        .theme-toggle {
+            background: var(--bg-soft);
+            border: none;
+            border-radius: 40px;
+            width: 2.4rem;
+            height: 2.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(0.96);
+        }
+
+        /* ========= 404 内容区域 ========= */
+        .error-section {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 0;
+        }
+
+        .error-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .error-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-glow);
+        }
+
+        /* 插画 */
+        .illustration {
+            margin-bottom: 1.5rem;
+        }
+        .illustration svg {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            filter: drop-shadow(0 8px 20px rgba(59,130,246,0.15));
+        }
+
+        .error-code {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .error-message {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 搜索框 */
+        .search-box {
+            max-width: 400px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 1rem;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-light);
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-family: 'Inter', monospace;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* 按钮组 */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1e6fdf);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.25s;
+            text-decoration: none;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            padding: 0.8rem 1.8rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            color: var(--accent);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* 推荐文章 */
+        .suggestions {
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .suggestions h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .suggestions-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .suggestions-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .suggestions-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 返回首页链接 */
+        .back-home {
+            margin-top: 1.5rem;
+            display: inline-block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        .back-home:hover {
+            color: var(--accent);
+        }
+
+        /* ========= 页脚 (完全复用首页样式) ========= */
+        .site-footer {
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-surface);
+            backdrop-filter: blur(8px);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        body.dark .site-footer {
+            background: rgba(10,15,26,0.8);
+        }
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            margin-left: 1.5rem;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.2rem;
+            }
+            .error-card {
+                padding: 1.8rem;
+                margin: 0 1rem;
+            }
+            .error-code {
+                font-size: 3.5rem;
+            }
+            .error-title {
+                font-size: 1.2rem;
+            }
+            .illustration svg {
+                max-width: 200px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn-primary, .btn-outline {
+                width: 80%;
+                justify-content: center;
+            }
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-links a {
+                margin: 0 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="tech-line"></div>
+<div class="tech-line2"></div>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <a href="#">✨ 流光志</a>
+        </div>
+        <div class="nav-menu">
+            <a href="#">首页</a>
+            <a href="#">文章</a>
+            <a href="#">灵感库</a>
+            <a href="#">关于</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换日夜模式">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <div class="error-section">
+            <div class="error-card">
+                <!-- 404 插画（科技风格） -->
+                <div class="illustration">
+                    <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="blue404" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#1e6fdf"/>
+                            </linearGradient>
+                            <linearGradient id="lightBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#60a5fa"/>
+                                <stop offset="100%" stop-color="#93c5fd"/>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                                <feMerge>
+                                    <feMergeNode in="offsetblur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- 背景装饰环 -->
+                        <circle cx="200" cy="140" r="100" stroke="url(#blue404)" stroke-width="1.5" fill="none" opacity="0.25" stroke-dasharray="6 6"/>
+                        <circle cx="200" cy="140" r="75" stroke="url(#lightBlue)" stroke-width="1" fill="none" opacity="0.2" stroke-dasharray="4 8"/>
+
+                        <!-- 破损的文档图标 -->
+                        <g filter="url(#glow)">
+                            <path d="M160 100 L240 100 L260 120 L260 220 L160 220 Z" fill="url(#blue404)" opacity="0.9"/>
+                            <path d="M240 100 L240 120 L260 120 Z" fill="#60a5fa" opacity="0.8"/>
+                            <!-- 问号 -->
+                            <text x="210" y="175" font-family="Inter, sans-serif" font-size="48" font-weight="800" fill="white" text-anchor="middle">?</text>
+                        </g>
+
+                        <!-- 飘浮的碎片 -->
+                        <rect x="270" y="130" width="15" height="15" rx="3" fill="url(#lightBlue)" opacity="0.7" transform="rotate(25 277 137)">
+                            <animateTransform attributeName="transform" type="rotate" from="0 277 137" to="360 277 137" dur="4s" repeatCount="indefinite"/>
+                        </rect>
+                        <rect x="130" y="230" width="12" height="12" rx="3" fill="#3b82f6" opacity="0.6" transform="rotate(15 136 236)">
+                            <animateTransform attributeName="transform" type="rotate" from="0 136 236" to="360 136 236" dur="3.5s" repeatCount="indefinite"/>
+                        </rect>
+
+                        <!-- 轨迹线条 -->
+                        <path d="M120 250 Q160 270 200 255 Q240 240 280 255" stroke="url(#lightBlue)" stroke-width="1.5" fill="none" stroke-dasharray="4 4" opacity="0.6"/>
+
+                        <!-- 科技光点 -->
+                        <circle cx="120" cy="90" r="2.5" fill="#60a5fa" opacity="0.8">
+                            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="300" cy="100" r="2" fill="#3b82f6" opacity="0.7">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="320" cy="180" r="2.5" fill="#60a5fa" opacity="0.6">
+                            <animate attributeName="opacity" values="0.4;0.9;0.4" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+
+                <h1 class="error-code">404</h1>
+                <h2 class="error-title">哎呀！页面走丢了</h2>
+                <p class="error-message">您访问的页面似乎不存在，可能已被移动或删除。不如搜索一下您想找的内容？</p>
+
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索文章...">
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <a href="#" class="btn-primary" id="homeBtn">
+                        <i class="fas fa-home"></i> 返回首页
+                    </a>
+                    <a href="#" class="btn-outline" id="archiveBtn">
+                        <i class="fas fa-archive"></i> 文章归档
+                    </a>
+                </div>
+
+                <!-- 推荐文章 -->
+                <div class="suggestions">
+                    <h4><i class="fas fa-compass"></i> 您可能感兴趣</h4>
+                    <div class="suggestions-links">
+                        <a href="#">Vue 3 组合式 API 最佳实践</a>
+                        <a href="#">现代 CSS 魔法：容器查询与网格</a>
+                        <a href="#">前端性能精讲：从指标到调优</a>
+                        <a href="#">从零参与开源：我的 PR 之旅</a>
+                    </div>
+                </div>
+
+                <a href="#" class="back-home" id="backHomeLink">
+                    <i class="fas fa-arrow-left"></i> 回到上一页
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-copyright">© 2025 流光志 · 呼吸版心设计 | 记录思考与旅程</div>
+        <div class="footer-links">
+            <a href="#">RSS</a>
+            <a href="#">隐私条款</a>
+            <a href="#">友链</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    (function() {
+        // 主题切换 (与首页完全一致)
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        const storedTheme = localStorage.getItem('blog-theme-v3');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let isDark = storedTheme === 'dark' || (storedTheme !== 'light' && prefersDark);
+
+        function applyTheme(dark) {
+            if (dark) {
+                document.body.classList.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('blog-theme-v3', 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('blog-theme-v3', 'light');
+            }
+        }
+        applyTheme(isDark);
+        themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
+
+        // 搜索演示
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const keyword = searchInput.value.trim();
+                if (keyword) {
+                    showToast(`🔍 搜索 “${keyword}” (演示模式)`);
+                }
+            }
+        });
+
+        // 按钮点击演示
+        const homeBtn = document.getElementById('homeBtn');
+        const archiveBtn = document.getElementById('archiveBtn');
+        const backHomeLink = document.getElementById('backHomeLink');
+
+        homeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('🏠 返回首页 (演示模式)');
+        });
+
+        archiveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('📚 文章归档页面 (演示模式)');
+        });
+
+        backHomeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.history.back();
+            showToast('↩️ 返回上一页');
+        });
+
+        // 推荐文章链接演示
+        const suggestLinks = document.querySelectorAll('.suggestions-links a');
+        suggestLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showToast(`📖 演示模式：即将打开《${link.innerText}》`);
+            });
+        });
+
+        // 导航链接演示
+        const navLinks = document.querySelectorAll('.nav-menu a:not(.theme-toggle), .footer-links a, .logo a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                let txt = link.innerText.trim();
+                if (txt.length > 20) txt = txt.slice(0, 18) + '…';
+                showToast(`✨ 演示模式：${txt} 页面建设中`);
+            });
+        });
+
+        // Toast 提示
+        function showToast(msg) {
+            let toast = document.querySelector('.error-toast');
+            if (toast) toast.remove();
+            toast = document.createElement('div');
+            toast.className = 'error-toast';
+            toast.textContent = msg;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '28px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'var(--accent)';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 24px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontSize = '0.85rem';
+            toast.style.fontWeight = '500';
+            toast.style.zIndex = '9999';
+            toast.style.boxShadow = '0 8px 20px var(--accent-glow)';
+            toast.style.backdropFilter = 'blur(8px)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+    })();
+</script>
+</body>
+</html>
