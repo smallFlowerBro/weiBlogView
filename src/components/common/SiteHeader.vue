@@ -143,11 +143,9 @@ body.dark .site-header {
 <script setup>
 import {onMounted, ref} from 'vue';
 import {useRouter,useRoute} from "vue-router";
-// 声明变量
-// 模式转换的而央视
 let skinIcon = ref("fa-moon");
-// 路由实例
 let router = useRouter();
+
 //初始化
 const init = () => {
   // 当前样式
@@ -174,9 +172,9 @@ const changeSkin = function () {
 }
 
 //点击logo
-const clickLogo = ()=>{
-    router.push("home")
-}
+const clickLogo = ()=>{router.push("home")}
+
+
 onMounted(() => {
   //初始化
   init();

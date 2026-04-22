@@ -5,10 +5,13 @@ import '@/global.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import App from './App.vue'
 import router from './router'
+import {createPinia} from "pinia";
 
+let pinia = createPinia();
 let app = createApp(App)
 
 //启用路由
 app.use(router);
-
+//启用pinia状态管理
+app.use(pinia)
 app.mount('#app')

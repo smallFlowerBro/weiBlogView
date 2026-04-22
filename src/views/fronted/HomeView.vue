@@ -532,12 +532,11 @@ body.dark .slide-content {
 }
 </style>
 <script setup>
-import {ref, onMounted, reactive} from "vue"
+import {ref, reactive} from "vue"
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 // 引入样式 (Splide 只有一个 CSS 文件，不需要像 Swiper 那样拆分引入)
 import '@splidejs/vue-splide/css';
-import fetch from "@/lib/fetch/index.js";
-import api from "@/api.js";
+import {getHotArticlesList, getSideList} from "@/api/fronted/article.js";
 
 // 配置项 (比 Swiper 直观太多)
 const splideOptions = ref({
@@ -558,23 +557,18 @@ const splideOptions = ref({
 
 // 轮播图
 let slide_contents = reactive({
-  //正在加载
-  is_loading:true,
-  //是否有内容
-  details:[]
+  is_loading:true,  //正在加载
+  details:[]        //内容
 });
 // 文章列表
 let article_list = reactive({
-  //正在加载
-  is_loading:true,
-  //是否有内容
-  details:[]
+  is_loading:true,  //正在加载
+  details:[]        //内容
 })
 
 //获取轮播内容
 const getSlideContent = function (){
-  fetch.post(api.wb2db_q_slide_contents,{
-  }).then((result)=>{
+  getSideList().then((result)=>{
     slide_contents.is_loading = false
     slide_contents.details = result.details
   },(error)=>{
@@ -583,23 +577,16 @@ const getSlideContent = function (){
 }
 //获取文章内容
 const getArticles =function (){
-  fetch.post(api.wb2db_q_article_list,{
-  }).then((result)=>{
+  getHotArticlesList().then((result)=>{
       article_list.is_loading = false
       article_list.details = result.details
   },(error)=>{
     console.log(error)
   })
 }
-const init  = function(){
-
-    getSlideContent();
-
-    getArticles()
-}
 
 
-
-init()
+getSlideContent();
+getArticles()
 
 </script>

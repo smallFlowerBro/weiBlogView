@@ -20,6 +20,7 @@
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-table-of-contents": "^1.2.0",
     "markdown-it-toc-done-right": "^4.2.0",
+    "pinia": "^3.0.4",
     "uuid": "^13.0.0",
     "vue": "^3.5.32",
     "vue-router": "^5.0.4"

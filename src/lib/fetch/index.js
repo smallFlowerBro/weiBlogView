@@ -25,15 +25,21 @@ axios_instance.interceptors.request.use(function (config){
 })
 //响应拦截
 axios_instance.interceptors.response.use(function (response){
+    console.log(response)
     // 对响应数据做点什么
     return response.data;
 },function (error){
+    console.log(error)
+
     // 对响应错误做点什么
     let status = error.response.status
     console.log('错误响应==========》' + status)
     if (status == 401 || status == 402) {
         console.log('401-------------')
+        //TODO 退出并导向
         //store.dispatch('logout').finally(() => location.reload())
+
+        return
     }
 
     let isSuccess = error.response.data.success
@@ -55,12 +61,6 @@ axios_instance.interceptors.response.use(function (response){
 //post 方法
 function post (url,params){
 
-    if (url.indexOf("[SOCKETIOERROR]") > -1) {
-        return Promise.reject({
-            code: "-1",
-            msg: "数据服务网络异常",
-        })
-    }
     return new Promise((resolve,reject)=>{
         let method = axios_instance.post;
 
@@ -93,14 +93,7 @@ function post (url,params){
 
 //get 方法
 function get(url,params){
-    if (url.indexOf("[SOCKETIOERROR]") > -1) {
-        return Promise.reject({
-            code: "-1",
-            msg: "数据服务网络异常",
-        })
-    }
     return new Promise((resolve,reject)=>{
-
         let method = axios_instance.get;
         method(url,params).then((result)=>{
             if(result.code == "0"){
