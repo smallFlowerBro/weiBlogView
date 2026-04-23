@@ -70,8 +70,21 @@ let routes = [
 ]
 
 const router = createRouter({
-    history : createWebHistory(),
+    history : createWebHashHistory(),
     routes  : routes
 })
+
+router.beforeEach((to, from, next) => {
+    // 如果是纯锚点跳转（路径相同，只有 hash 不同）
+    console.log(to.path,from.path)
+    if (to.path === from.path && to.hash) {
+
+        // 这里可以选择 next(false) 阻止路由刷新，或者 next() 让它继续但需配合 scrollBehavior
+        // 通常配合 scrollBehavior 使用效果更好
+        return next(false);
+    }
+    next();
+});
+
 
 export default router;

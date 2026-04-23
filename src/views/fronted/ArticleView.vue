@@ -7,7 +7,7 @@
           <el-skeleton :loading="article_info.is_loading">
             <ul class="toc-list">
               <li v-for="(item,index) in article_info.toc_list" :class="'toc-h'+item.level" :key="index"><a
-                  :href="'#'+item.id">{{ item.title }}</a></li>
+                  :href="item.id" @click.prevent = "scrollToSection">{{ item.title }}</a></li>
             </ul>
             <template #template>
               <el-skeleton-item variant="rect" class="w-100 " style="height: 200px"></el-skeleton-item>
@@ -523,6 +523,14 @@
     //文章内容
     content_html:""
   })
+  //滚动到指定位置
+  function scrollToSection (event){
+    console.log(event.target.getAttribute("href"))
+      let id = event.target.getAttribute("href");
+      let el = document.getElementById(id);
+      el.scrollIntoView({behavior:"smooth",top: "80px"});
+
+  }
   //获取文章内容详情
   const getArticle = async function () {
     return getArticleDetail({}).then((result) => {
