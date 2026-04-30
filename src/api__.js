@@ -35,5 +35,5 @@ Object.keys(apiConfig).forEach((item)=>{
 
 })
 
-let api = __api__
-export default api;
+let api__ = __api__
+export default api__;
