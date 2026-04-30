@@ -1,5 +1,6 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
-
+import {getToken} from "@/lib/auth/index.js";
+import {useRouter} from "vue-router";
 
 //路由表
 let routes = [
@@ -61,6 +62,11 @@ let routes = [
         path: "/login",
         component:()=>import("@/views/admin/LoginView.vue")
     },
+    {
+      path: "/admin/",
+      component:()=>import("@/views/admin/AdminIndexView.vue")
+    },
+
     //没有匹配的问题
     {
         path: '/:pathMatch(.*)*',
@@ -75,15 +81,21 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    // 如果是纯锚点跳转（路径相同，只有 hash 不同）
-    console.log(to.path,from.path)
-    if (to.path === from.path && to.hash) {
+    let isAdmin = to.matched.some(record=>record.path.startsWith("/admin"))
 
-        // 这里可以选择 next(false) 阻止路由刷新，或者 next() 让它继续但需配合 scrollBehavior
-        // 通常配合 scrollBehavior 使用效果更好
-        return next(false);
+    console.log(isAdmin,to)
+    if(isAdmin){
+        let token =getToken();
+        if (token){
+            next()
+        }else{
+            router.push("/login")
+        }
+
+    }else{
+        next();
     }
-    next();
+
 });
 
 

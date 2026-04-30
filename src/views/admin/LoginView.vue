@@ -131,10 +131,15 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import {userStore} from "@/store/userStore.js";
+import {useRouter} from "vue-router";
+//
+let user = userStore();
+let router = useRouter();
 
 // 表单数据
 const form = reactive({
-  username: 'writer@lightvue.com',
+  username: 'admin',
   password: ''
 })
 
@@ -180,9 +185,15 @@ const handleLogin = async () => {
 
   loading.value = true
   // 模拟 API 请求
-  await new Promise(resolve => setTimeout(resolve, 800))
-  loading.value = false
+  //await new Promise(resolve => setTimeout(resolve, 800))
+  let isLogin = await user.login({
+    userName :form.username,
+    password:form.password
+  })
 
+
+
+  loading.value = false
   // 保存记住密码
   if (rememberMe.value) {
     localStorage.setItem('writer_user', form.username.trim())
@@ -192,8 +203,17 @@ const handleLogin = async () => {
     localStorage.setItem('writer_remember', 'false')
   }
 
-  showToast('✅ 登录成功，欢迎回来 (演示模式)')
+  console.log(isLogin)
   // 实际跳转: router.push('/dashboard')
+  console.log("执行到这里")
+  if(isLogin){
+     showToast('✅ 登录成功，欢迎回来 (演示模式)')
+     setTimeout(function (){
+       router.push("/admin")
+     },500)
+  }else{
+    //TODO 应该提示错误信息
+  }
 }
 
 // 忘记密码

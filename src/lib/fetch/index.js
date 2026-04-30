@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getToken} from "@/lib/auth/index.js";
+import {getToken,removeToken} from "@/lib/auth/index.js";
 import globalConfig from "@/globalConfig.js";
 
 let axios_instance = axios.create({
@@ -17,7 +17,7 @@ let axios_instance = axios.create({
 axios_instance.interceptors.request.use(function (config){
     const token = getToken();
     if(token){
-        config.headers["Authorization"]  = token;
+        config.headers["Authorization"]  ="Bearer "+ token;
     }
     return config;
 },function (error){
@@ -25,19 +25,18 @@ axios_instance.interceptors.request.use(function (config){
 })
 //响应拦截
 axios_instance.interceptors.response.use(function (response){
-    console.log(response)
     // 对响应数据做点什么
     return response.data;
 },function (error){
-    console.log(error)
-
     // 对响应错误做点什么
     let status = error.response.status
     console.log('错误响应==========》' + status)
-    if (status == 401 || status == 402) {
+    if (status == 401 || status == 403) {
         console.log('401-------------')
         //TODO 退出并导向
         //store.dispatch('logout').finally(() => location.reload())
+        //未认证或者token清一下 或者
+        removeToken();
 
         return
     }
