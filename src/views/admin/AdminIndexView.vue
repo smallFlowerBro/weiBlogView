@@ -335,6 +335,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* 全局样式与主题变量 */
+/*
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -350,6 +351,7 @@ body.dark {
   background: #0a0f1a;
   color: #eef5ff;
 }
+*/
 
 .particle-canvas {
   position: fixed;

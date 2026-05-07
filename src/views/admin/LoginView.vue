@@ -133,6 +133,8 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import {userStore} from "@/store/userStore.js";
 import {useRouter} from "vue-router";
+import {Toast} from "@/lib/utils/index.js";
+
 //
 let user = userStore();
 let router = useRouter();
@@ -162,21 +164,20 @@ let height = 0
 
 // 表单验证
 const validateForm = () => {
-  let isValid = true
   errors.username = ''
   errors.password = ''
 
   if (!form.username.trim()) {
     errors.username = '请输入邮箱或用户名'
-    isValid = false
+    return false
   }
 
   if (!form.password.trim()) {
     errors.password = '请输入密码'
-    isValid = false
+    return false
   }
 
-  return isValid
+  return true
 }
 
 // 登录提交
@@ -202,54 +203,30 @@ const handleLogin = async () => {
     localStorage.removeItem('writer_user')
     localStorage.setItem('writer_remember', 'false')
   }
-
-  console.log(isLogin)
-  // 实际跳转: router.push('/dashboard')
-  console.log("执行到这里")
   if(isLogin){
-     showToast('✅ 登录成功，欢迎回来 (演示模式)')
+     Toast.show('✅ 登录成功，欢迎回来')
      setTimeout(function (){
        router.push("/admin")
      },500)
   }else{
     //TODO 应该提示错误信息
+    errors.username="密码或用户出错"
+    errors.password="密码或用户出错"
   }
 }
 
 // 忘记密码
 const handleForgotPassword = () => {
-  showToast('📧 重置链接已发送至您的邮箱 (演示)')
+  Toast.show('📧 重置链接已发送至您的邮箱 (演示)')
 }
 
 // 第三方登录
 const handleGithubLogin = () => {
-  showToast('🐙 GitHub 授权登录 (演示)')
+  Toast.show('🐙 GitHub 授权登录 (演示)')
 }
 
 const handleGoogleLogin = () => {
-  showToast('🔐 Google 账号登录 (演示)')
-}
-
-// Toast 提示
-const showToast = (msg) => {
-  const toast = document.createElement('div')
-  toast.className = 'custom-toast'
-  toast.textContent = msg
-  toast.style.position = 'fixed'
-  toast.style.bottom = '28px'
-  toast.style.left = '50%'
-  toast.style.transform = 'translateX(-50%)'
-  toast.style.backgroundColor = '#3b82f6'
-  toast.style.color = 'white'
-  toast.style.padding = '10px 24px'
-  toast.style.borderRadius = '40px'
-  toast.style.fontSize = '0.85rem'
-  toast.style.fontWeight = '500'
-  toast.style.zIndex = '9999'
-  toast.style.boxShadow = '0 8px 20px rgba(59,130,246,0.4)'
-  toast.style.backdropFilter = 'blur(8px)'
-  document.body.appendChild(toast)
-  setTimeout(() => toast.remove(), 2500)
+  Toast.show('🔐 Google 账号登录 (演示)')
 }
 
 // 加载记住的凭证

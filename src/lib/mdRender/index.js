@@ -1,5 +1,5 @@
 //请求相关
-import UUIDManager from "@/lib/utils/index.js";
+import {UUIDManager} from "@/lib/utils/index.js";
 //markdown相关
 import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
