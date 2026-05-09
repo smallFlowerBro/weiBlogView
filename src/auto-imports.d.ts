@@ -11,11 +11,25 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CommentsManager: typeof import('./components/CommentsManager.vue')['default']
+    Dashboard: typeof import('./components/Dashboard.vue')['default']
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElMenu: typeof import('element-plus/es')['ElMenu']
+    ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
+    ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
+    LogsPanel: typeof import('./components/LogsPanel.vue')['default']
+    NavSidebar: typeof import('./components/admin/NavSidebar.vue')['default']
+    PostsManager: typeof import('./components/PostsManager.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SiteFooter: typeof import('./components/common/SiteFooter.vue')['default']
     SiteHeader: typeof import('./components/common/SiteHeader.vue')['default']
+    ThemePanel: typeof import('./components/ThemePanel.vue')['default']
   }
 }
