@@ -63,8 +63,39 @@ let routes = [
         component:()=>import("@/views/admin/LoginView.vue")
     },
     {
-      path: "/admin/",
-      component:()=>import("@/views/admin/AdminIndexView.vue")
+      path: "/admin",
+      component:()=>import("@/views/admin/AdminIndexView.vue"),
+      children: [
+          {
+              //首页
+              path:"",
+              component:()=>import("@/components/Dashboard.vue")
+          },
+          {
+              //默认大屏页面
+              path: "/admin/dashboard",
+              component:()=>import("@/components/Dashboard.vue")
+          },
+          {
+              //默认大屏页面
+              path: "/admin/posts",
+              component:()=>import("@/components/PostsManager.vue")
+          },
+          {
+              //默认大屏页面
+              path: "/admin/comments",
+              component:()=>import("@/components/CommentsManager.vue")
+          },
+          {
+              //默认大屏页面
+              path: "/admin/logs",
+              component:()=>import("@/components/LogsPanel.vue")
+          },{
+              //默认大屏页面
+              path: "/admin/theme",
+              component:()=>import("@/components/ThemePanel.vue")
+          },
+      ]
     },
 
     //没有匹配的问题
@@ -82,8 +113,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     let isAdmin = to.matched.some(record=>record.path.startsWith("/admin"))
-
-    console.log(isAdmin,to)
     if(isAdmin){
         let token =getToken();
         if (token){

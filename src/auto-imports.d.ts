@@ -31,5 +31,7 @@ declare module 'vue' {
     SiteFooter: typeof import('./components/common/SiteFooter.vue')['default']
     SiteHeader: typeof import('./components/common/SiteHeader.vue')['default']
     ThemePanel: typeof import('./components/ThemePanel.vue')['default']
+    TopActionBar: typeof import('./components/admin/TopActionBar.vue')['default']
+    TopTabsBar: typeof import('./components/admin/TopTabsBar.vue')['default']
   }
 }

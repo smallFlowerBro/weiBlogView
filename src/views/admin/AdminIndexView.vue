@@ -6,163 +6,33 @@
     <!-- 右侧工作区 -->
     <div class="right-workspace">
       <!-- 顶部栏 -->
-      <div class="top-action-bar">
-        <div class="btn-icon-group">
-          <el-button text @click="toggleTheme" :title="isDarkTheme ? '切换至日光模式' : '切换至暗夜模式'">
-            <i :class="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
-          </el-button>
-          <el-button text @click="toggleFullscreen" title="全屏">
-            <i class="fas fa-expand"></i>
-          </el-button>
-          <el-button text @click="handleLogout" title="退出登录">
-            <i class="fas fa-sign-out-alt"></i>
-          </el-button>
-        </div>
-      </div>
-
+      <top-action-bar></top-action-bar>
       <!-- Element Plus Tabs 多标签页 -->
-      <el-tabs
-          v-model="activeTabName"
-          type="card"
-          class="custom-tabs"
-          @tab-click="handleTabClick"
-          @tab-remove="handleTabRemove"
-          closable
-      >
-        <el-tab-pane
-            v-for="tab in openedTabs"
-            :key="tab.name"
-            :name="tab.name"
-            :label="tab.label"
-        >
-          <template #label>
-            <span><i :class="tab.icon"></i> {{ tab.label }}</span>
-          </template>
-        </el-tab-pane>
-      </el-tabs>
+      <top-tabs-bar></top-tabs-bar>
 
       <!-- 动态内容区域 -->
+<!--      <div class="content-pane">-->
+<!--        <component :is="currentComponent" :key="activeTabName" />-->
+<!--      </div>-->
       <div class="content-pane">
-        <component :is="currentComponent" :key="activeTabName" />
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { ElMessage } from 'element-plus'
-import Dashboard from '@/components/Dashboard.vue'
-import PostsManager from '@/components/PostsManager.vue'
-import CommentsManager from '@/components/CommentsManager.vue'
-import LogsPanel from '@/components/LogsPanel.vue'
-import ThemePanel from '@/components/ThemePanel.vue'
 import NavSidebar from "@/components/admin/NavSidebar.vue";
+import TopActionBar from "@/components/admin/TopActionBar.vue";
+import TopTabsBar from "@/components/admin/TopTabsBar.vue";
 
-// 页面组件映射
-const pageComponentMap = {
-  dashboard: Dashboard,
-  posts: PostsManager,
-  comments: CommentsManager,
-  logs: LogsPanel,
-  theme: ThemePanel
-}
+import {menuAndTabStore} from "@/store/menuAndTabStore.js";
 
-// 页面配置
-const pageConfig = {
-  dashboard: { name: '仪表盘', icon: 'fas fa-tachometer-alt', label: '仪表盘' },
-  posts: { name: '文章管理', icon: 'fas fa-file-alt', label: '文章管理' },
-  comments: { name: '评论审核', icon: 'fas fa-comment-dots', label: '评论审核' },
-  logs: { name: '操作日志', icon: 'fas fa-history', label: '操作日志' },
-  theme: { name: '外观主题', icon: 'fas fa-palette', label: '外观主题' }
-}
-
-// 状态
-
-const openedTabs = ref([])
-const activeTabName = ref('')
-
-// 计算当前显示的组件
-const currentComponent = computed(() => {
-  const tab = openedTabs.value.find(t => t.name === activeTabName.value)
-  if (!tab) return Dashboard
-  return pageComponentMap[tab.pageId] || Dashboard
-})
-
-// 主题相关
-const isDarkTheme = computed(() => document.body.classList.contains('dark'))
-
-// 打开页面
-const openPage = (pageId) => {
-  const config = pageConfig[pageId]
-  if (!config) return
-
-  // 检查是否已打开
-  const existingTab = openedTabs.value.find(tab => tab.pageId === pageId)
-  if (existingTab) {
-    activeTabName.value = existingTab.name
-  } else {
-    const newTabName = `${pageId}-${Date.now()}`
-    const newTab = {
-      name: newTabName,
-      pageId: pageId,
-      label: config.label,
-      icon: config.icon
-    }
-    openedTabs.value.push(newTab)
-    activeTabName.value = newTabName
-  }
-  activeMenu.value = pageId
-}
-
-// 关闭标签页
-const handleTabRemove = (tabName) => {
-  const idx = openedTabs.value.findIndex(t => t.name === tabName)
-  if (idx === -1) return
-
-  const wasActive = activeTabName.value === tabName
-  openedTabs.value.splice(idx, 1)
-
-  if (openedTabs.value.length === 0) {
-    openPage('dashboard')
-  } else if (wasActive) {
-    const newActiveIdx = Math.min(idx, openedTabs.value.length - 1)
-    activeTabName.value = openedTabs.value[newActiveIdx].name
-  }
-}
-
-// 点击标签页切换
-const handleTabClick = (tab) => {
-  activeTabName.value = tab.paneName
-  const tabData = openedTabs.value.find(t => t.name === tab.paneName)
-  if (tabData) {
-    activeMenu.value = tabData.pageId
-  }
-}
-
-
-
-
-// 切换主题
-const toggleTheme = () => {
-  document.body.classList.toggle('dark')
-  const isDark = document.body.classList.contains('dark')
-  localStorage.setItem('flat_theme_pref', isDark ? 'dark' : 'light')
-}
-
-// 全屏
-const toggleFullscreen = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen()
-  } else {
-    document.exitFullscreen()
-  }
-}
-
-// 退出登录
-const handleLogout = () => {
-  ElMessage.info('退出登录（演示模式）')
-}
+let menuAndTab = menuAndTabStore();
 
 // 初始化数据
 const initData = () => {
@@ -189,10 +59,11 @@ const initData = () => {
   const savedTheme = localStorage.getItem('flat_theme_pref')
   if (savedTheme === 'dark') document.body.classList.add('dark')
 
-  //openPage('dashboard')
+  menuAndTab.openPage('dashboard')
 }
 
 onMounted(() => {
+  // 模拟数据初始化
   initData()
   window.dispatchEvent(new Event('storageUpdate'))
 })
@@ -220,113 +91,7 @@ body {
   overflow: hidden;
 }
 
-/* 左侧导航区 */
-.nav-sidebar {
-  background: #FFFFFF;
-  border-right: 1px solid #E2E8F0;
-  transition: width 0.2s ease;
-  width: 240px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex-shrink: 0;
-}
 
-.nav-sidebar.collapsed {
-  width: 64px;
-}
-
-.nav-sidebar.collapsed .logo-text {
-  display: none;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px;
-  border-bottom: 1px solid #E9EEF3;
-  margin-bottom: 8px;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #0F172A;
-}
-
-.logo-area i {
-  color: #3B82F6;
-  font-size: 1.2rem;
-}
-
-.collapse-btn {
-  background: #F1F5F9;
-  border: none;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-  font-size: 1rem;
-  color: #475569;
-}
-
-.collapse-btn:hover {
-  background: #E2E8F0;
-  color: #0F172A;
-}
-
-/* Element Plus 菜单样式覆盖 */
-.el-menu {
-  border-right: none !important;
-  background: transparent !important;
-}
-
-.el-menu-item,
-.el-sub-menu__title {
-  height: 42px !important;
-  line-height: 42px !important;
-  margin: 2px 8px !important;
-  border-radius: 6px !important;
-  font-size: 0.85rem !important;
-  color: #334155 !important;
-}
-
-.el-menu-item.is-active {
-  background: #EFF6FF !important;
-  color: #2563EB !important;
-}
-
-.el-menu-item:hover,
-.el-sub-menu__title:hover {
-  background: #F1F5F9 !important;
-  color: #2563EB !important;
-}
-
-.el-sub-menu .el-menu-item {
-  padding-left: 44px !important;
-}
-
-.el-menu--collapse .el-menu-item,
-.el-menu--collapse .el-sub-menu__title {
-  justify-content: center !important;
-  text-align: center;
-  padding: 0 !important;
-}
-
-.el-menu--collapse .el-menu-item i,
-.el-menu--collapse .el-sub-menu__title i {
-  margin-right: 0 !important;
-  font-size: 1.1rem;
-}
 
 /* 右侧工作区 */
 .right-workspace {
@@ -337,31 +102,7 @@ body {
   background: #F8FAFE;
 }
 
-/* 顶部栏 */
-.top-action-bar {
-  background: #FFFFFF;
-  padding: 6px 24px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  border-bottom: 1px solid #E2E8F0;
-  height: 52px;
-}
 
-.btn-icon-group {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-icon-group .el-button {
-  font-size: 1.2rem;
-  color: #5B6E8C;
-}
-
-.btn-icon-group .el-button:hover {
-  color: #2563EB;
-  background: #F1F5F9;
-}
 
 /* Element Plus Tabs 自定义样式 */
 .custom-tabs {
