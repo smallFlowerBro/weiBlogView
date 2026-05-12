@@ -30,6 +30,10 @@
           <i class="fas fa-file-alt"></i> &nbsp;&nbsp;
           <span>文章管理</span>
         </el-menu-item>
+        <el-menu-item index="articleEdit">
+          <i class="fas fa-file-alt"></i> &nbsp;&nbsp;
+          <span>文章编辑</span>
+        </el-menu-item>
         <el-menu-item index="comments">
           <i class="fas fa-comment-dots"></i>&nbsp;&nbsp;
           <span>评论审核</span>

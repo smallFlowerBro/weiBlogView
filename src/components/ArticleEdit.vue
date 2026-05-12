@@ -24,72 +24,22 @@
       </div>
     </div>
 
-    <!-- 主编辑区 -->
-    <div class="editor-main">
-      <!-- 左侧编辑区 -->
-      <div class="editor-left">
-        <div class="editor-toolbar">
-          <el-button-group>
-            <el-button size="small" @click="insertMarkdown('**', '**')" title="加粗">
-              <i class="fas fa-bold"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('*', '*')" title="斜体">
-              <i class="fas fa-italic"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('# ', '')" title="一级标题">
-              <i class="fas fa-heading"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('## ', '')" title="二级标题">
-              <span class="heading-icon">H2</span>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('[', '](url)')" title="链接">
-              <i class="fas fa-link"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('![', '](url)')" title="图片">
-              <i class="fas fa-image"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('```\n', '\n```')" title="代码块">
-              <i class="fas fa-code"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('- ', '')" title="无序列表">
-              <i class="fas fa-list-ul"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('1. ', '')" title="有序列表">
-              <i class="fas fa-list-ol"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('> ', '')" title="引用">
-              <i class="fas fa-quote-right"></i>
-            </el-button>
-            <el-button size="small" @click="insertMarkdown('---', '')" title="分割线">
-              <i class="fas fa-minus"></i>
-            </el-button>
-            <el-button size="small" @click="insertTableMarkdown" title="表格">
-              <i class="fas fa-table"></i>
-            </el-button>
-          </el-button-group>
-        </div>
-        <el-input
-            v-model="article.content"
-            type="textarea"
-            :rows="20"
-            placeholder="使用 Markdown 编写文章内容..."
-            class="content-textarea"
-        />
-      </div>
-
-      <!-- 右侧预览区 -->
-      <div class="editor-right">
-        <div class="preview-header">
-          <span><i class="fas fa-eye"></i> 实时预览</span>
-          <div class="preview-actions">
-            <el-tag size="small" type="info">markdown-it</el-tag>
-            <el-button size="small" text @click="copyContent" title="复制内容">
-              <i class="fas fa-copy"></i>
-            </el-button>
-          </div>
-        </div>
-        <div class="preview-content" v-html="renderedContent"></div>
-      </div>
+    <!-- md-editor-v3 编辑器 -->
+    <div class="editor-container">
+      <MdEditor
+          v-model="article.content"
+          :toolbars="toolbars"
+          :toolbars-exclude="toolbarsExclude"
+          :theme="editorTheme"
+          language="zh-CN"
+          :preview="true"
+          :html-preview="false"
+          :code-style="codeStyle"
+          :editor-id="'markdown-editor'"
+          @onSave="handleEditorSave"
+          @onUploadImg="handleUploadImage"
+          class="markdown-editor"
+      />
     </div>
 
     <!-- 底部设置区 -->
@@ -169,6 +119,15 @@
                   placeholder="输入 SEO 关键词，用逗号分隔"
               />
             </div>
+            <div class="setting-item">
+              <label><i class="fas fa-font"></i> 字数统计</label>
+              <div class="word-count">
+                <span>当前字数: {{ wordCount }} 字</span>
+                <span v-if="wordCount > 0" class="reading-time">
+                  预计阅读: {{ readingTime }} 分钟
+                </span>
+              </div>
+            </div>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -181,26 +140,8 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowLeft, Picture } from '@element-plus/icons-vue'
-import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js'
-
-// 初始化 markdown-it 并配置语法高亮
-const md = new MarkdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-  breaks: true,
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return '<pre class="hljs"><code>' +
-            hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
-            '</code></pre>'
-      } catch (__) {}
-    }
-    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
-  }
-})
+import {MdEditor} from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 
 // 路由
 const router = useRouter()
@@ -225,78 +166,102 @@ const saving = ref(false)
 const publishing = ref(false)
 const activeCollapse = ref(['settings'])
 
+// 编辑器主题
+const editorTheme = computed(() => {
+  return document.body.classList.contains('dark-for-flat') ? 'dark' : 'light'
+})
+
+// 代码样式
+const codeStyle = ref({
+  'white-space': 'pre-wrap',
+  'word-break': 'break-all',
+  'font-family': 'Consolas, Monaco, "Courier New", monospace'
+})
+
+// 工具栏配置 - 完整功能
+const toolbars = [
+  'bold',
+  'italic',
+  'underline',
+  'strikeThrough',
+  'title',
+  'sub',
+  'sup',
+  'quote',
+  'unorderedList',
+  'orderedList',
+  'taskList',
+  'codeRow',
+  'code',
+  'link',
+  'image',
+  'table',
+  'mermaid',
+  'katex',
+  'revoke',
+  'next',
+  'save',
+  '=',
+  'preview',
+  'htmlPreview',
+  'catalog',
+  'github'
+]
+
+// 排除的工具栏（保留全部）
+const toolbarsExclude = ref([])
+
 // 标签选项
 const tagOptions = ref([
   'Vue.js', 'React', 'JavaScript', 'TypeScript', 'Node.js',
   'Python', 'Docker', 'Kubernetes', 'Linux', '数据库',
-  'AI', '机器学习', '前端工程化', '性能优化'
+  'AI', '机器学习', '前端工程化', '性能优化', '面试'
 ])
 
-// 渲染 Markdown 内容（使用 markdown-it）
-const renderedContent = computed(() => {
-  if (!article.value.content) {
-    return '<div style="color: #94A3B8; text-align: center; padding: 60px 20px;">' +
-        '<i class="fas fa-feather-alt" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>' +
-        '✨ 开始编写你的文章吧 ✨' +
-        '</div>'
-  }
-  try {
-    return md.render(article.value.content)
-  } catch (e) {
-    console.error('Markdown 渲染错误:', e)
-    return '<div style="color: #EF4444; padding: 20px;">Markdown 解析出错: ' + e.message + '</div>'
-  }
+// 字数统计
+const wordCount = computed(() => {
+  if (!article.value.content) return 0
+  // 移除 Markdown 语法后统计中文字符和英文单词
+  const plainText = article.value.content
+      .replace(/[#*`>~\[\]()_+\-=[\]{}|\\]/g, '')
+      .replace(/!\[.*?\]\(.*?\)/g, '')
+      .replace(/\[.*?\]\(.*?\)/g, '')
+      .replace(/```[\s\S]*?```/g, '')
+      .trim()
+  // 统计中文字符 + 英文单词
+  const chineseChars = (plainText.match(/[\u4e00-\u9fa5]/g) || []).length
+  const englishWords = (plainText.match(/[a-zA-Z]+/g) || []).length
+  return chineseChars + englishWords
 })
 
-// 获取光标位置并插入文本
-const insertMarkdown = (prefix, suffix) => {
-  const textarea = document.querySelector('.content-textarea textarea')
-  if (!textarea) return
+// 预计阅读时间（按每分钟 300 字计算）
+const readingTime = computed(() => {
+  if (wordCount.value === 0) return 0
+  return Math.max(1, Math.ceil(wordCount.value / 300))
+})
 
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const selectedText = article.value.content.substring(start, end)
+// 编辑器保存事件处理
+const handleEditorSave = (value, html) => {
+  saveAsDraft()
+}
 
-  let newText
-  if (selectedText && suffix) {
-    newText = article.value.content.substring(0, start) +
-        prefix + selectedText + suffix +
-        article.value.content.substring(end)
-  } else {
-    newText = article.value.content.substring(0, start) +
-        prefix + selectedText + suffix +
-        article.value.content.substring(end)
-  }
-
-  article.value.content = newText
-
-  // 恢复焦点和选中区域
-  nextTick(() => {
-    textarea.focus()
-    let newCursorPos
-    if (selectedText && suffix) {
-      newCursorPos = start + prefix.length + selectedText.length
-    } else {
-      newCursorPos = start + prefix.length
-    }
-    textarea.setSelectionRange(newCursorPos, newCursorPos)
+// 处理图片上传（可扩展为上传到服务器）
+const handleUploadImage = async (files, callback) => {
+  // 模拟图片上传，实际项目中可替换为上传到服务器
+  const promises = files.map(file => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        // 这里可以替换为真实的上传接口
+        // 示例：使用 base64 直接显示（仅用于演示）
+        resolve(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    })
   })
-}
 
-// 插入表格的快捷方法
-const insertTableMarkdown = () => {
-  const tableTemplate = '\n\n| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容1 | 内容2 | 内容3 |\n| 内容4 | 内容5 | 内容6 |\n\n'
-  insertMarkdown(tableTemplate, '')
-}
-
-// 复制内容
-const copyContent = async () => {
-  try {
-    await navigator.clipboard.writeText(article.value.content)
-    ElMessage.success('内容已复制到剪贴板')
-  } catch {
-    ElMessage.error('复制失败')
-  }
+  const urls = await Promise.all(promises)
+  callback(urls)
 }
 
 // 返回上一页
@@ -330,7 +295,11 @@ const saveAsDraft = async () => {
     // 自动生成摘要
     let summary = article.value.summary
     if (!summary && article.value.content) {
-      const plainText = article.value.content.replace(/[#*`>\[\(\])]/g, '').slice(0, 150)
+      const plainText = article.value.content
+          .replace(/[#*`>~\[\]()_+\-=[\]{}|\\]/g, '')
+          .replace(/!\[.*?\]\(.*?\)/g, '')
+          .replace(/\[.*?\]\(.*?\)/g, '')
+          .slice(0, 150)
       summary = plainText + (plainText.length >= 150 ? '...' : '')
     }
 
@@ -372,6 +341,7 @@ const saveAsDraft = async () => {
     article.value.status = 'draft'
     ElMessage.success('已保存为草稿')
   } catch (error) {
+    console.error(error)
     ElMessage.error('保存失败')
   } finally {
     saving.value = false
@@ -397,7 +367,11 @@ const publishArticle = async () => {
     // 自动生成摘要
     let summary = article.value.summary
     if (!summary && article.value.content) {
-      const plainText = article.value.content.replace(/[#*`>\[\(\])]/g, '').slice(0, 150)
+      const plainText = article.value.content
+          .replace(/[#*`>~\[\]()_+\-=[\]{}|\\]/g, '')
+          .replace(/!\[.*?\]\(.*?\)/g, '')
+          .replace(/\[.*?\]\(.*?\)/g, '')
+          .slice(0, 150)
       summary = plainText + (plainText.length >= 150 ? '...' : '')
     }
 
@@ -444,6 +418,7 @@ const publishArticle = async () => {
       router.push('/posts')
     }, 1000)
   } catch (error) {
+    console.error(error)
     ElMessage.error('发布失败')
   } finally {
     publishing.value = false
@@ -483,11 +458,10 @@ const loadArticle = () => {
       router.push('/posts')
     }
   } else {
-    // 新建文章，重置状态
     article.value = {
       id: null,
       title: '',
-      content: '',
+      content: '# 欢迎使用 Markdown 编辑器\n\n在这里开始撰写你的精彩文章...\n\n## 功能特性\n\n- 支持 Markdown 语法\n- 实时预览\n- 代码高亮\n- 表格支持\n- 图片上传\n- 任务列表\n- 数学公式\n- 流程图\n\n> 享受写作的乐趣！',
       category: '',
       tags: [],
       coverImage: '',
@@ -498,11 +472,6 @@ const loadArticle = () => {
     }
   }
 }
-
-// 监听路由参数变化
-watch(() => route.params.id, () => {
-  loadArticle()
-}, { immediate: true })
 
 // 键盘快捷键支持
 const handleKeydown = (e) => {
@@ -518,13 +487,28 @@ const handleKeydown = (e) => {
   }
 }
 
+// 监听路由参数变化
+watch(() => route.params.id, () => {
+  loadArticle()
+}, { immediate: true })
+
+// 监听主题变化
+const observer = new MutationObserver(() => {
+  // 主题变化时强制刷新编辑器主题
+  nextTick(() => {
+    // md-editor-v3 会自动适配主题，无需额外操作
+  })
+})
+
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
   loadArticle()
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] })
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
+  observer.disconnect()
 })
 </script>
 
@@ -546,6 +530,7 @@ onUnmounted(() => {
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .header-left {
@@ -580,195 +565,19 @@ onUnmounted(() => {
   gap: 12px;
 }
 
-/* 主编辑区 */
-.editor-main {
+/* 编辑器容器 */
+.editor-container {
   flex: 1;
-  display: flex;
-  gap: 20px;
-  padding: 20px;
   overflow: hidden;
+  padding: 0 20px;
   min-height: 0;
 }
 
-.editor-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #E2E8F0;
-  overflow: hidden;
-}
-
-.editor-toolbar {
-  padding: 12px;
-  border-bottom: 1px solid #E2E8F0;
-  background: #FAFCFE;
-}
-
-.heading-icon {
-  font-weight: 600;
-  font-size: 11px;
-}
-
-.content-textarea {
-  flex: 1;
-}
-
-.content-textarea :deep(.el-textarea__inner) {
+.markdown-editor {
   height: 100% !important;
-  resize: none;
-  border: none;
-  border-radius: 0;
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.editor-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid #E2E8F0;
   overflow: hidden;
-}
-
-.preview-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid #E2E8F0;
-  background: #FAFCFE;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #475569;
-}
-
-.preview-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.preview-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-/* Markdown 预览样式 */
-.preview-content :deep(h1) {
-  font-size: 2rem;
-  margin: 1.5rem 0 0.75rem;
-  border-bottom: 1px solid #E2E8F0;
-  padding-bottom: 0.5rem;
-}
-
-.preview-content :deep(h2) {
-  font-size: 1.6rem;
-  margin: 1.2rem 0 0.6rem;
-  border-bottom: 1px solid #E2E8F0;
-  padding-bottom: 0.3rem;
-}
-
-.preview-content :deep(h3) {
-  font-size: 1.35rem;
-  margin: 1rem 0 0.5rem;
-}
-
-.preview-content :deep(h4) {
-  font-size: 1.15rem;
-  margin: 0.8rem 0 0.4rem;
-}
-
-.preview-content :deep(p) {
-  margin: 0.8rem 0;
-}
-
-.preview-content :deep(code) {
-  background: #F1F5F9;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 0.85em;
-}
-
-.preview-content :deep(pre) {
-  background: #1E293B;
-  color: #E2E8F0;
-  padding: 1rem;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 1rem 0;
-}
-
-.preview-content :deep(pre code) {
-  background: transparent;
-  padding: 0;
-  color: inherit;
-}
-
-.preview-content :deep(blockquote) {
-  border-left: 4px solid #3B82F6;
-  margin: 1rem 0;
-  padding-left: 1rem;
-  color: #64748B;
-  background: #F8FAFE;
-  border-radius: 0 8px 8px 0;
-}
-
-.preview-content :deep(ul),
-.preview-content :deep(ol) {
-  padding-left: 1.8rem;
-  margin: 0.8rem 0;
-}
-
-.preview-content :deep(li) {
-  margin: 0.3rem 0;
-}
-
-.preview-content :deep(img) {
-  max-width: 100%;
-  border-radius: 8px;
-  margin: 0.5rem 0;
-}
-
-.preview-content :deep(a) {
-  color: #3B82F6;
-  text-decoration: none;
-}
-
-.preview-content :deep(a:hover) {
-  text-decoration: underline;
-}
-
-.preview-content :deep(table) {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1rem 0;
-}
-
-.preview-content :deep(th),
-.preview-content :deep(td) {
-  border: 1px solid #E2E8F0;
-  padding: 8px 12px;
-  text-align: left;
-}
-
-.preview-content :deep(th) {
-  background: #F1F5F9;
-  font-weight: 600;
-}
-
-.preview-content :deep(hr) {
-  border: none;
-  border-top: 1px solid #E2E8F0;
-  margin: 1.5rem 0;
 }
 
 /* 底部设置区 */
@@ -776,6 +585,7 @@ onUnmounted(() => {
   background: #FFFFFF;
   border-top: 1px solid #E2E8F0;
   padding: 0 20px;
+  flex-shrink: 0;
 }
 
 .settings-grid {
@@ -832,50 +642,42 @@ onUnmounted(() => {
   color: #64748B;
 }
 
+.word-count {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #64748B;
+}
+
+.reading-time {
+  color: #3B82F6;
+}
+
 /* 暗色主题适配 */
 body.dark-for-flat .article-editor {
   background: #0F172A;
 }
 
 body.dark-for-flat .editor-header,
-body.dark-for-flat .editor-left,
-body.dark-for-flat .editor-right,
 body.dark-for-flat .editor-footer {
   background: #1E293B;
   border-color: #334155;
 }
 
-body.dark-for-flat .editor-toolbar,
-body.dark-for-flat .preview-header {
-  background: #16212E;
+body.dark-for-flat .markdown-editor {
   border-color: #334155;
-}
-
-body.dark-for-flat .preview-content :deep(code) {
-  background: #2D3A4E;
-  color: #E2E8F0;
-}
-
-body.dark-for-flat .preview-content :deep(blockquote) {
-  background: #16212E;
-  color: #94A3B8;
-}
-
-body.dark-for-flat .preview-content :deep(th) {
-  background: #2D3A4E;
 }
 
 body.dark-for-flat .setting-item label {
   color: #94A3B8;
 }
 
+body.dark-for-flat .word-count {
+  color: #94A3B8;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
-  .editor-main {
-    flex-direction: column;
-    gap: 12px;
-  }
-
   .settings-grid {
     grid-template-columns: 1fr;
   }
@@ -887,6 +689,10 @@ body.dark-for-flat .setting-item label {
   .title-input-wrapper {
     max-width: none;
     width: 100%;
+  }
+
+  .editor-container {
+    padding: 0 12px;
   }
 }
 </style>

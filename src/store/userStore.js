@@ -1,17 +1,16 @@
 import {defineStore} from "pinia";
 import {removeToken,setToken} from "@/lib/auth/index.js";
 import {loginByNameAndPwd} from "@/api/admin/user.js";
-export const userStore = defineStore("user",{
+import {useRouter} from "vue-router";
+export const userStore = defineStore("user",()=>{
 
-    state:()=>({
         //公共变量
-    }),
-    getters:()=>({
-        //计算变量
-    }),
-    actions:{
+        let router = useRouter();
+
+
+        //方法
         //登录
-        async login(params){
+        async function  login(params){
             //
             return await loginByNameAndPwd(params).then((result)=>{
                 //登陆成功
@@ -22,12 +21,18 @@ export const userStore = defineStore("user",{
                 //登录失败
                 return false
             })
-        },
+        }
+
+
         //退出
-        logout(){
+        function logout(){
             //清楚token
             removeToken()
+            router.push("/login")
         }
+    return {
+        logout,
+        login
     }
 
 

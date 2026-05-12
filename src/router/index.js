@@ -1,6 +1,5 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import {getToken} from "@/lib/auth/index.js";
-import {useRouter} from "vue-router";
 
 //路由表
 let routes = [
@@ -94,6 +93,10 @@ let routes = [
               //默认大屏页面
               path: "/admin/theme",
               component:()=>import("@/components/ThemePanel.vue")
+          },{
+              //文章编辑
+              path: "/admin/articleEdit",
+              component:()=>import("@/components/ArticleEdit.vue")
           },
       ]
     },

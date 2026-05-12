@@ -9,7 +9,8 @@ const pageConfig = {
     posts: { name: '文章管理', icon: 'fas fa-file-alt', label: '文章管理' },
     comments: { name: '评论审核', icon: 'fas fa-comment-dots', label: '评论审核' },
     logs: { name: '操作日志', icon: 'fas fa-history', label: '操作日志' },
-    theme: { name: '外观主题', icon: 'fas fa-palette', label: '外观主题' }
+    theme: { name: '外观主题', icon: 'fas fa-palette', label: '外观主题' },
+    articleEdit: { name: '文章编辑', icon: 'fas fa-palette', label: '文章编辑' },
 }
 export const menuAndTabStore = defineStore("menuAndTab",()=>{
 

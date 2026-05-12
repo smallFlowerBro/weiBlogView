@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ArticleEdit: typeof import('./components/ArticleEdit.vue')['default']
     CommentsManager: typeof import('./components/CommentsManager.vue')['default']
     Dashboard: typeof import('./components/Dashboard.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']

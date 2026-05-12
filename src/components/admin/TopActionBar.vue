@@ -14,10 +14,12 @@
   </div>
 </template>
 <script setup>
-
+import {userStore} from "@/store/userStore.js";
 // 主题相关
 import {computed} from "vue";
 import {ElMessage} from "element-plus";
+
+let user_store = userStore();
 
 const isDarkTheme = computed(() => document.body.classList.contains('dark'))
 // 切换主题
@@ -38,7 +40,7 @@ const toggleFullscreen = () => {
 
 // 退出登录
 const handleLogout = () => {
-  ElMessage.info('退出登录（演示模式）')
+  user_store.logout()
 }
 </script>
 <style scoped>
