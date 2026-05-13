@@ -1,17 +1,14 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 
 
+
+
 // // 页面配置
-const pageConfig = {
-    dashboard: { name: '仪表盘', icon: 'fas fa-tachometer-alt', label: '仪表盘' },
-    posts: { name: '文章管理', icon: 'fas fa-file-alt', label: '文章管理' },
-    comments: { name: '评论审核', icon: 'fas fa-comment-dots', label: '评论审核' },
-    logs: { name: '操作日志', icon: 'fas fa-history', label: '操作日志' },
-    theme: { name: '外观主题', icon: 'fas fa-palette', label: '外观主题' },
-    articleEdit: { name: '文章编辑', icon: 'fas fa-palette', label: '文章编辑' },
-}
+const pageConfig = {}
+
+
 export const menuAndTabStore = defineStore("menuAndTab",()=>{
 
     let router = useRouter();
@@ -21,6 +18,86 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
     let activeTabName =  ref("");
     //打开的tab页
     let openedTabs = ref([]);
+
+    let menu_info = reactive({
+        is_loading:true,
+        menus:[]
+    })
+
+
+    const init = function (){
+        menu_info.is_loading=false;
+        menu_info.menus = [
+            {
+                name : "仪表盘",
+                label : "仪表盘",
+                icon : "fas fa-tachometer-alt",
+                index: "dashboard",
+                children : []
+            },
+            {
+                name : "内容管理",
+                icon : "fas fa-folder-open",
+                index: "content",
+                children : [
+                    {
+                        name : "文章管理",
+                        label : "文章管理",
+                        icon : "fas fa-file-alt",
+                        index: "posts",
+                    },
+                    {
+                        name : "文章编辑",
+                        label : "文章编辑",
+                        icon : "fas fa-file-alt",
+                        index: "articleEdit",
+                    },
+                    {
+                        name : "评论审核",
+                        label : "评论审核",
+                        icon : "fas fa-comment-dots",
+                        index: "comments",
+                    },
+
+                ]
+            },
+            {
+                name : "系统设置",
+                icon : "fas fa-sliders-h",
+                index: "settings",
+                children : [
+                    {
+                        name : "操作日志",
+                        label : "操作日志",
+                        icon : "fas fa-file-alt",
+                        index: "logs",
+                    },
+                    {
+                        name : "外观主题",
+                        label : "外观主题",
+                        icon : "fas fa-palette",
+                        index: "theme",
+                    }
+                ]
+            },
+        ]
+
+        menu_info.menus.forEach((menu)=>{
+            if(menu.children.length===0){
+                pageConfig[menu.index] = menu;
+            }else{
+                menu.children.forEach((sub_menu)=>{
+                    pageConfig[sub_menu.index] = sub_menu;
+                })
+            }
+        })
+
+        console.log(pageConfig)
+
+    }
+
+    init();
+
 
     const openPage = (pageId)=>{
 
@@ -52,6 +129,7 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
         activeMenu,
         activeTabName,
         openedTabs,
+        menu_info,
         openPage
     }
 

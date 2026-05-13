@@ -9,51 +9,37 @@
         <i class="fas fa-bars"></i>
       </button>
     </div>
-    <el-menu
-        :default-active="menu.activeMenu"
-        :collapse="isCollapsed"
-        :collapse-transition="false"
-        @select="handleMenuSelect"
-        unique-opened
-    >
+    <el-skeleton :loading="menu.menu_info.is_loading">
+      <el-menu
+          :default-active="menu.activeMenu"
+          :collapse="isCollapsed"
+          :collapse-transition="false"
+          @select="handleMenuSelect"
+          unique-opened
+      >
+        <template v-for="item in menu.menu_info.menus">
+          <el-menu-item v-if="item.children.length === 0" :index="item.index">
+            <i :class="item.icon"></i>&nbsp;&nbsp;
+            <span>{{item.name}}</span>
+          </el-menu-item>
+          <el-sub-menu v-else :index="item.index">
+            <template #title>
+              <i :class="item.icon"></i>&nbsp;&nbsp;
+              <span>{{item.name}}</span>
+            </template>
+            <el-menu-item v-for="sub_menu in item.children" :index="sub_menu.index" >
+              <i :class="sub_menu.icon"></i>&nbsp;&nbsp;
+              <span>{{sub_menu.name}}</span>
+            </el-menu-item>
+          </el-sub-menu>
+        </template>
 
-      <el-menu-item index="dashboard">
-        <i class="fas fa-tachometer-alt"></i>&nbsp;&nbsp;
-        <span>仪表盘</span>
-      </el-menu-item>
-      <el-sub-menu index="content">
-        <template #title>
-          <i class="fas fa-folder-open"></i>&nbsp;&nbsp;
-          <span>内容管理</span>
+      </el-menu>
+        <template #template>
+          <el-skeleton-item variant="rect" class="w-100 h-100"></el-skeleton-item>
         </template>
-        <el-menu-item index="posts">
-          <i class="fas fa-file-alt"></i> &nbsp;&nbsp;
-          <span>文章管理</span>
-        </el-menu-item>
-        <el-menu-item index="articleEdit">
-          <i class="fas fa-file-alt"></i> &nbsp;&nbsp;
-          <span>文章编辑</span>
-        </el-menu-item>
-        <el-menu-item index="comments">
-          <i class="fas fa-comment-dots"></i>&nbsp;&nbsp;
-          <span>评论审核</span>
-        </el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="settings">
-        <template #title>
-          <i class="fas fa-sliders-h"></i>&nbsp;&nbsp;
-          <span>系统设置</span>
-        </template>
-        <el-menu-item index="logs">
-          <i class="fas fa-history"></i>&nbsp;&nbsp;
-          <span>操作日志</span>
-        </el-menu-item>
-        <el-menu-item index="theme">
-          <i class="fas fa-palette"></i>&nbsp;&nbsp;
-          <span>外观主题</span>
-        </el-menu-item>
-      </el-sub-menu>
-    </el-menu>
+    </el-skeleton>
+
   </div>
 </template>
 
@@ -64,11 +50,12 @@
 
   let isCollapsed = ref(false)
   let menu = menuAndTabStore();
+
+
   // 折叠导航
   const toggleCollapse = () => {
     isCollapsed.value = !isCollapsed.value
   }
-
   // 菜单选择
   const handleMenuSelect = (index) => {
     if (index === 'content' || index === 'settings') return
