@@ -28,15 +28,16 @@ let menuAndTab = menuAndTabStore();
 const handleTabRemove = (tabName) => {
   const idx = menuAndTab.openedTabs.findIndex(t => t.name === tabName)
   if (idx === -1) return
-
   const wasActive = menuAndTab.activeTabName === tabName
   menuAndTab.openedTabs.splice(idx, 1)
-
+  console.log(wasActive)
   if (menuAndTab.openedTabs.length === 0) {
     menuAndTab.openPage('dashboard')
   } else if (wasActive) {
     const newActiveIdx = Math.min(idx, menuAndTab.openedTabs.length - 1)
     menuAndTab.activeTabName = menuAndTab.openedTabs[newActiveIdx].name
+    menuAndTab.activeMenu = menuAndTab.openedTabs[newActiveIdx].pageId
+    menuAndTab.openPage(menuAndTab.activeMenu)
   }
 }
 
