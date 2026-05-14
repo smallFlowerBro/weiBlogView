@@ -81,12 +81,12 @@ let routes = [
               component:()=>import("@/components/PostsManager.vue")
           },
           {
-              //默认大屏页面
+              //评论管理
               path: "/admin/comments",
               component:()=>import("@/components/CommentsManager.vue")
           },
           {
-              //默认大屏页面
+              //日志管理
               path: "/admin/logs",
               component:()=>import("@/components/LogsPanel.vue")
           },{
@@ -97,6 +97,14 @@ let routes = [
               //文章编辑
               path: "/admin/articleEdit",
               component:()=>import("@/components/ArticleEdit.vue")
+          },{
+              //文章分类管理
+              path: "/admin/categories",
+              component:()=>import("@/views/admin/CategoriesManagerView.vue")
+          },{
+              //文章分类管理
+              path: "/admin/tags",
+              component:()=>import("@/views/admin/TagManagerView.vue")
           },
       ]
     },

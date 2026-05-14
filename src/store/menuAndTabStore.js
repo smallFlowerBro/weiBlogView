@@ -41,6 +41,17 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
                 index: "content",
                 children : [
                     {
+                        name : "分类管理",
+                        label : "分类管理",
+                        icon : "fas fa-layer-group",
+                        index: "categories",
+                    },{
+                        name : "标签管理",
+                        label : "标签管理",
+                        icon : "fas fa-layer-group",
+                        index: "tags",
+                    },
+                    {
                         name : "文章管理",
                         label : "文章管理",
                         icon : "fas fa-file-alt",
