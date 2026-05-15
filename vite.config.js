@@ -10,14 +10,14 @@ export default defineConfig({
   plugins: [
       vue(),
       AutoImport({
-          resolvers: [ElementPlusResolver()],
+          resolvers: [ElementPlusResolver({importStyle:"css"})],
           // 解决 TypeScript 报错 (可选，但推荐)
           dts: 'src/auto-imports.d.ts',
       }),
       Components({
         // 指定需要自动扫描的组件目录
         dirs: ['src/components/common'],
-        resolvers:[ElementPlusResolver()]
+        resolvers:[ElementPlusResolver({importStyle:"css"})]
       })
   ],
   resolve: {

@@ -3,6 +3,8 @@ import { createApp } from 'vue'
 import '@/global.css'
 //引入文字图标库
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import 'element-plus/theme-chalk/el-message-box.css' // 解决 MessageBox 样式丢失
+import 'element-plus/theme-chalk/el-message.css'    // 解决 Message 样式丢失
 import App from './App.vue'
 import router from './router'
 import {createPinia} from "pinia";

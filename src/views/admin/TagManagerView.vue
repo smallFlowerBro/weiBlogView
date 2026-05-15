@@ -3,16 +3,13 @@
     <!-- 搜索和操作栏 -->
     <div class="action-bar">
       <div class="search-area">
-        <el-input
-            v-model="searchKeyword"
+        <el-input v-model="searchKeyword"
             placeholder="搜索标签名称或缩略名"
             clearable
             style="width: 260px"
             @keyup.enter="handleSearch"
         >
-          <template #prefix>
-            <i class="fas fa-search"></i>
-          </template>
+          <template #prefix><i class="fas fa-search"></i></template>
         </el-input>
         <el-button type="primary" @click="handleSearch">
           <i class="fas fa-search"></i> 搜索
@@ -129,6 +126,7 @@
     </div>
 
     <!-- 分页 -->
+    <el-config-provider :locale="zhCn">
     <div class="pagination-wrapper" v-if="filteredTags.length > 0">
       <el-pagination
           v-model:current-page="currentPage"
@@ -139,7 +137,7 @@
           @size-change="handleSizeChange"
           @current-change="handlePageChange"
       />
-    </div>
+    </div></el-config-provider>
 
     <!-- 新建/编辑标签对话框 -->
     <el-dialog
@@ -213,6 +211,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {zhCn} from "element-plus/es/locale/index";
 
 // 数据状态
 const tags = ref([])

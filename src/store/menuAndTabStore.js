@@ -48,7 +48,7 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
                     },{
                         name : "标签管理",
                         label : "标签管理",
-                        icon : "fas fa-layer-group",
+                        icon : "fas fa-tags",
                         index: "tags",
                     },
                     {
@@ -60,7 +60,7 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
                     {
                         name : "文章编辑",
                         label : "文章编辑",
-                        icon : "fas fa-file-alt",
+                        icon : "fas fa-pencil-alt",
                         index: "articleEdit",
                     },
                     {
