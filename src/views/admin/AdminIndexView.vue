@@ -15,9 +15,13 @@
 <!--        <component :is="currentComponent" :key="activeTabName" />-->
 <!--      </div>-->
       <div class="content-pane">
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
+        <router-view v-slot="{ Component }">
+          <transition>
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </transition>
+        </router-view>
       </div>
 
     </div>

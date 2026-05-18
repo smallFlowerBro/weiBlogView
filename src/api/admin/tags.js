@@ -7,7 +7,7 @@ let api = setApi({
         api:"/api/tags/wb2db_q_tags_info",
         mock:"/mock/wb2db_q_tags_info.json"
     },
-    //
+    //根据关键词检索标签
     wb2db_q_tags_list:{
         api:"/api/tags/wb2db_q_tags_list",
         mock:"/mock/wb2db_q_tags_list.json"

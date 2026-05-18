@@ -122,18 +122,17 @@ const router = createRouter({
     routes  : routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
     let isAdmin = to.matched.some(record=>record.path.startsWith("/admin"))
     if(isAdmin){
         let token =getToken();
         if (token){
-            next()
+            return
         }else{
             router.push("/login")
         }
-
     }else{
-        next();
+        return
     }
 
 });

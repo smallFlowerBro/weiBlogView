@@ -72,6 +72,10 @@
           :key="tag.id"
           class="tag-card"
           :style="{ borderTopColor: tag.color }"
+          @click="toggleTag(tag.id)"
+          :class="{'active':selectedIds.includes(tag.id)}"
+
+
       >
         <div class="tag-header">
           <span class="tag-name" :style="{ color: tag.color }">
@@ -212,19 +216,21 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {zhCn} from "element-plus/es/locale/index";
+import {wb2db_q_tags_list} from "@/api/admin/tags.js";
+
 
 // 数据状态
-const tags = ref([])
-const loading = ref(false)
-const submitting = ref(false)
-const searchKeyword = ref('')
-const selectedIds = ref([])
-const currentPage = ref(1)
-const pageSize = ref(24)
+const tags = ref([])          //标签列表
+const loading = ref(false)    //加载中
+const submitting = ref(false) //提交中
+const searchKeyword = ref('') //关键词
+const selectedIds = ref([])   //选中的标签
+const currentPage = ref(1)    //当前页
+const pageSize = ref(24)      //页面大小
 
 // 对话框状态
-const dialogVisible = ref(false)
-const editingId = ref(null)
+const dialogVisible = ref(false)   //对话框是否可用
+const editingId = ref(null)        //是否可编辑
 const formRef = ref(null)
 
 // 预定义颜色
@@ -324,68 +330,29 @@ const paginatedTags = computed(() => {
 })
 
 // 方法
-const loadTags = () => {
-  loading.value = true
-  try {
-    const stored = localStorage.getItem('blog_tags')
-    if (stored) {
-      tags.value = JSON.parse(stored)
-    } else {
-      // 初始化默认数据
-      tags.value = [
-        {
-          id: 1,
-          name: 'Vue.js',
-          slug: 'vue-js',
-          description: 'Vue.js 相关技术文章',
-          color: '#409EFF',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 2,
-          name: 'JavaScript',
-          slug: 'javascript',
-          description: 'JavaScript 编程语言',
-          color: '#F7DF1E',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 3,
-          name: '后端开发',
-          slug: 'backend',
-          description: '后端技术栈相关内容',
-          color: '#67C23A',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 4,
-          name: '运维',
-          slug: 'devops',
-          description: '运维与自动化相关',
-          color: '#E6A23C',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: 5,
-          name: '数据库',
-          slug: 'database',
-          description: '数据库设计与优化',
-          color: '#845EC2',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ]
-      saveTags()
-    }
-  } catch (error) {
-    ElMessage.error('加载标签数据失败')
-  } finally {
-    loading.value = false
+
+// 根据关键词查询的 标签列表 传空字符 查全部
+const loadTags = (keyword)=>{
+
+  wb2db_q_tags_list({"keyword":keyword}).then((result)=>{
+    tags.value = result.detail
+  },(error)=>{
+    ElMessage.error("出现异常")
+  }).finally(()=>{
+    loading.value=false
+  })
+}
+
+
+//选中tag
+const toggleTag = (tag_id)=>{
+
+  if(selectedIds.value.includes(tag_id)){
+    selectedIds.value = selectedIds.value.filter((tag)=>tag != tag_id);
+  }else{
+    selectedIds.value.push(tag_id);
   }
+
 }
 
 const saveTags = () => {
@@ -598,7 +565,7 @@ const formatDate = (dateStr) => {
 }
 
 onMounted(() => {
-  loadTags()
+  loadTags("")
 })
 </script>
 
@@ -690,6 +657,13 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
   margin-bottom: 24px;
+}
+
+.tags-grid div{
+  cursor: pointer;
+}
+.tags-grid .tag-card.active{
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .tag-card {
