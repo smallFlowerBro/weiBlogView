@@ -19,6 +19,7 @@ export const userStore = defineStore("user",()=>{
                 return true
             },(error)=>{
                 //登录失败
+                removeToken()
                 return false
             })
         }

@@ -135,7 +135,7 @@
       <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :page-sizes="[12, 24, 48, 96]"
+          :page-sizes="[8,12,24]"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -185,6 +185,7 @@
             <el-color-picker
                 v-model="formData.color"
                 show-alpha
+                color-format="hex"
                 :predefine="predefineColors"
             />
             <el-input
@@ -216,7 +217,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {zhCn} from "element-plus/es/locale/index";
-import {wb2db_q_tags_list} from "@/api/admin/tags.js";
+import {wb2db_create_tag, wb2db_q_tags_list,wb2db_update_tag,
+        wb2db_delete_tag,wb2db_batch_delete_tag} from "@/api/admin/tags.js";
 
 
 // 数据状态
@@ -286,7 +288,7 @@ const formRules = {
   color: [
     { required: true, message: '请选择标签颜色', trigger: 'blur' },
     {
-      pattern: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+      pattern: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/,
       message: '请输入有效的颜色代码（如 #409EFF）',
       trigger: 'blur'
     }
@@ -333,7 +335,6 @@ const paginatedTags = computed(() => {
 
 // 根据关键词查询的 标签列表 传空字符 查全部
 const loadTags = (keyword)=>{
-
   wb2db_q_tags_list({"keyword":keyword}).then((result)=>{
     tags.value = result.detail
   },(error)=>{
@@ -395,7 +396,7 @@ const generateSlug = () => {
 }
 
 const validateColor = (value) => {
-  const colorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+  const colorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/
   if (!colorRegex.test(value) && value !== '') {
     ElMessage.warning('颜色格式不正确，请使用 #RRGGBB 格式')
   }
@@ -463,42 +464,59 @@ const submitForm = async () => {
         // 编辑标签
         const index = tags.value.findIndex(t => t.id === editingId.value)
         if (index !== -1) {
-          tags.value[index] = {
-            ...tags.value[index],
-            name: formData.value.name,
-            slug: formData.value.slug,
-            description: formData.value.description,
-            color: formData.value.color,
-            updatedAt: now
+         let res = await editTags({
+           id  : tags.value[index].id,
+           name: formData.value.name,
+           slug: formData.value.slug,
+           description: formData.value.description,
+           color: formData.value.color,
+         })
+          if(res){
+            tags.value[index] = res
           }
-          ElMessage.success('标签修改成功')
+
         }
       } else {
         // 新建标签
-        const newId = Math.max(...tags.value.map(t => t.id), 0) + 1
-        tags.value.push({
-          id: newId,
+        let response = await createTags({
           name: formData.value.name,
           slug: formData.value.slug,
           description: formData.value.description,
           color: formData.value.color,
-          createdAt: now,
-          updatedAt: now
         })
-        ElMessage.success('标签创建成功')
       }
-
-      saveTags()
-      dialogVisible.value = false
       closeDialog()
     } catch (error) {
-      ElMessage.error('操作失败')
+      console.log(error.toString())
+      ElMessage.error('操作异常')
     } finally {
       submitting.value = false
     }
   })
 }
 
+//新建tag
+const createTags = async function (new_tag = {}) {
+  return await wb2db_create_tag(new_tag).then((result) => {
+    tags.value.push(result.tagInfos);
+    return true;
+  }, (error) => {
+    ElMessage.error(error.msg||"操作失败")
+    return false;
+  })
+}
+
+// 修改Tag
+const editTags = async function (new_tag = {}) {
+  return await wb2db_update_tag(new_tag).then((result) => {
+    ElMessage.success("标签修改成功")
+    return  result.tagInfos;
+  }, (error) => {
+    ElMessage.error(error.msg||"操作失败")
+    return false;
+  })
+}
+//删除标签
 const handleDelete = async (row) => {
   try {
     await ElMessageBox.confirm(
@@ -512,16 +530,21 @@ const handleDelete = async (row) => {
     )
 
     const index = tags.value.findIndex(t => t.id === row.id)
+
     if (index !== -1) {
-      tags.value.splice(index, 1)
-      saveTags()
-      ElMessage.success('标签已删除')
+      wb2db_delete_tag({id:row.id})
+          .then((result)=>{
+            tags.value.splice(index, 1)
+            ElMessage.success('标签已删除')
+          },(error)=>{
+            ElMessage.error(error.msg||"标签删除失败")
+          })
     }
   } catch {
     // 用户取消删除
   }
 }
-
+//批量删除标签
 const handleBatchDelete = async () => {
   if (selectedIds.value.length === 0) return
 
@@ -536,10 +559,14 @@ const handleBatchDelete = async () => {
         }
     )
 
-    tags.value = tags.value.filter(t => !selectedIds.value.includes(t.id))
-    saveTags()
-    selectedIds.value = []
-    ElMessage.success('已删除选中标签')
+    wb2db_batch_delete_tag({ids:selectedIds.value.join(",")})
+        .then((result)=>{
+          tags.value = tags.value.filter(t => !selectedIds.value.includes(t.id))
+          selectedIds.value = []
+          ElMessage.success('已删除选中标签')
+        },(error)=>{
+          ElMessage.error(error.msg||"标签删除失败")
+        })
   } catch {
     // 用户取消删除
   }
@@ -663,7 +690,9 @@ onMounted(() => {
   cursor: pointer;
 }
 .tags-grid .tag-card.active{
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3); /* 带主题色的阴影 */
+  transform: translateY(-2px); /* 微微上浮 */
+  background-color: #ecf5ff; /* Element UI 的 primary-light-9 色 */
 }
 
 .tag-card {
