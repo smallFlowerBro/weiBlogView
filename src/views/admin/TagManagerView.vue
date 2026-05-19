@@ -86,7 +86,7 @@
                 link
                 type="primary"
                 size="small"
-                @click="openEditDialog(tag)"
+                @click.stop.prevent="openEditDialog(tag)"
             >
               <i class="fas fa-edit"></i>
             </el-button>
@@ -94,7 +94,7 @@
                 link
                 type="danger"
                 size="small"
-                @click="handleDelete(tag)"
+                @click.stop.prevent="handleDelete(tag)"
             >
               <i class="fas fa-trash-alt"></i>
             </el-button>
