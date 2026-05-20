@@ -207,7 +207,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {zhCn} from "element-plus/es/locale/index";
-import {createCategory, queryCategoryList} from "@/api/admin/categories.js";
+import {createCategory, queryCategoryList, updateCategory,deleteCategory,batchDeleteCategory} from "@/api/admin/categories.js";
 
 // 数据状态
 const categories = ref([])
@@ -353,15 +353,32 @@ const handleSelectionChange = (selection) => {
 const handleStatusChange = async (row) => {
   try {
     const index = categories.value.findIndex(c => c.id === row.id)
+    console.log(row.status)
+    console.log("Xxx",row.status==1)
     if (index !== -1) {
-      categories.value[index] = { ...row }
-      saveCategories()
-      ElMessage.success(`已${row.status === 1 ? '启用' : '禁用'}分类「${row.name}」`)
+      console.log(row)
+      let res = await editCategory({
+        id:row.id,
+        name: row.name,
+        slug: row.slug,
+        description: row.description,
+        sortOrder: row.sortOrder,
+        status: row.status==1?0:1,
+      })
+
+      if(res){
+        console.log(res)
+       // ElMessage.success(`已${res.status == 1 ? '启用' : '禁用'}分类「${row.name}」`)
+        categories.value[index] = res
+      }else{
+        ElMessage.error('操作失败')
+      }
+
+
     }
   } catch (error) {
+    console.log(error)
     ElMessage.error('操作失败')
-    // 回滚状态
-    loadCategories()
   }
 }
 
@@ -465,19 +482,20 @@ const submitForm = async () => {
         // 编辑分类
         const index = categories.value.findIndex(c => c.id === editingId.value)
         if (index !== -1) {
-          categories.value[index] = {
-            ...categories.value[index],
+          let res = await editCategory({
+            id:editingId.value,
             name: formData.value.name,
             slug: formData.value.slug,
             description: formData.value.description,
             sortOrder: formData.value.sortOrder,
             status: formData.value.status,
-            updated_at: now
+          })
+          if(res){
+            categories.value[index] = res
           }
-          ElMessage.success('分类修改成功')
         }
       } else {
-        let res = createNewCategory({
+        let res = await createNewCategory({
           name: formData.value.name,
           slug: formData.value.slug,
           description: formData.value.description,
@@ -500,16 +518,13 @@ const submitForm = async () => {
 }
 //保存分类修改
 const editCategory = async function(category){
-  return await createCategory(category).then((result) => {
-    categories.value.push(result.categoryInfos);
+  return await updateCategory(category).then((result) => {
     ElMessage.success("更新成功")
-    return true
+    return result.categoryInfos
   }, (error) => {
     ElMessage.error(error.msg || "更新分类失败")
     return false
   })
-
-
 }
 // 创建新得分类
 const createNewCategory = async function (category) {
@@ -523,7 +538,7 @@ const createNewCategory = async function (category) {
   })
 }
 const handleDelete = async (row) => {
-  if (row.is_default && row.id === 1) {
+  if (row.default && row.id === 1) {
     ElMessage.warning('默认分类不能删除')
     return
   }
@@ -540,11 +555,13 @@ const handleDelete = async (row) => {
     )
 
     const index = categories.value.findIndex(c => c.id === row.id)
-    if (index !== -1) {
+
+    deleteCategory({id:row.id}).then((retult)=>{
+      ElMessage.success('已删除分类')
       categories.value.splice(index, 1)
-      saveCategories()
-      ElMessage.success('分类已删除')
-    }
+    },(error)=>{
+      ElMessage.error(error.msg||"分类删除失败")
+    })
   } catch {
     // 用户取消删除
   }
@@ -570,10 +587,16 @@ const handleBatchDelete = async () => {
       }
     )
 
-    categories.value = categories.value.filter(c => !selectedIds.value.includes(c.id))
-    saveCategories()
-    selectedIds.value = []
-    ElMessage.success('已删除选中分类')
+    batchDeleteCategory({ids:selectedIds.value.join(",")})
+        .then((result)=>{
+          categories.value = categories.value.filter(c => !selectedIds.value.includes(c.id))
+          selectedIds.value = []
+          ElMessage.success('已删除选中分类')
+        },(error)=>{
+          ElMessage.error(error.msg||"分类删除失败")
+        })
+
+
   } catch {
     // 用户取消删除
   }
