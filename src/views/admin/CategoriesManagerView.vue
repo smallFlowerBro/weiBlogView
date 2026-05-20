@@ -46,7 +46,7 @@
         <template #default="{ row }">
           <div class="category-name">
             <span class="name-text">{{ row.name }}</span>
-            <el-tag v-if="row.is_default" size="small" type="success" effect="plain">默认</el-tag>
+            <el-tag v-if="row.default" size="small" type="success" effect="plain">默认</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -59,13 +59,13 @@
       <el-table-column prop="sort_order" label="排序" width="100" align="center" sortable>
         <template #default="{ row }">
           <div class="sort-control">
-            <span class="sort-value">{{ row.sort_order }}</span>
+            <span class="sort-value">{{ row.sortOrder }}</span>
             <div class="sort-actions">
               <el-button
                 size="small"
                 text
                 @click="changeSort(row, 'up')"
-                :disabled="row.sort_order <= 0"
+                :disabled="row.sortOrder <= 0"
               >
                 <i class="fas fa-chevron-up"></i>
               </el-button>
@@ -73,7 +73,7 @@
                 size="small"
                 text
                 @click="changeSort(row, 'down')"
-                :disabled="row.sort_order >= maxSortOrder"
+                :disabled="row.sortOrder >= maxSortOrder"
               >
                 <i class="fas fa-chevron-down"></i>
               </el-button>
@@ -95,7 +95,7 @@
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间" width="180" sortable>
         <template #default="{ row }">
-          {{ formatDate(row.created_at) }}
+          {{ formatDate(row.createdAt) }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right" align="center">
@@ -105,7 +105,7 @@
             type="primary"
             size="small"
             @click="openEditDialog(row)"
-            :disabled="row.is_default && row.id === 1"
+            :disabled="row.default && row.id === 1"
           >
             <i class="fas fa-edit"></i> 编辑
           </el-button>
@@ -114,7 +114,7 @@
             type="danger"
             size="small"
             @click="handleDelete(row)"
-            :disabled="row.is_default && row.id === 1"
+            :disabled="row.default && row.id === 1"
           >
             <i class="fas fa-trash-alt"></i> 删除
           </el-button>
@@ -124,6 +124,7 @@
 
     <!-- 分页 -->
     <div class="pagination-wrapper">
+      <el-config-provider :locale="zhCn">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -133,6 +134,7 @@
         @size-change="handleSizeChange"
         @current-change="handlePageChange"
       />
+      </el-config-provider>
     </div>
 
     <!-- 新建/编辑分类对话框 -->
@@ -174,7 +176,7 @@
         </el-form-item>
         <el-form-item label="排序权重" prop="sort_order">
           <el-input-number
-            v-model="formData.sort_order"
+            v-model="formData.sortOrder"
             :min="0"
             :max="9999"
             placeholder="数字越小越靠前"
@@ -204,6 +206,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {zhCn} from "element-plus/es/locale/index";
+import {createCategory, queryCategoryList} from "@/api/admin/categories.js";
 
 // 数据状态
 const categories = ref([])
@@ -263,7 +267,7 @@ const formRules = {
       trigger: 'blur'
     }
   ],
-  sort_order: [
+  sortOrder: [
     { type: 'number', required: true, message: '请输入排序权重', trigger: 'blur' }
   ]
 }
@@ -273,7 +277,7 @@ const dialogTitle = computed(() => editingId.value ? '编辑分类' : '新建分
 
 const maxSortOrder = computed(() => {
   if (categories.value.length === 0) return 0
-  return Math.max(...categories.value.map(c => c.sort_order))
+  return Math.max(...categories.value.map(c => c.sortOrder))
 })
 
 const filteredCategories = computed(() => {
@@ -289,7 +293,7 @@ const filteredCategories = computed(() => {
   }
 
   // 按排序权重排序
-  list.sort((a, b) => a.sort_order - b.sort_order)
+  list.sort((a, b) => a.sortOrder - b.sortOrder)
 
   return list
 })
@@ -316,27 +320,11 @@ watch(paginatedCategories, (newVal) => {
 const loadCategories = () => {
   loading.value = true
   try {
-    // 从 localStorage 加载数据
-    const stored = localStorage.getItem('blog_categories')
-    if (stored) {
-      categories.value = JSON.parse(stored)
-    } else {
-      // 初始化默认数据
-      categories.value = [
-        {
-          id: 1,
-          name: '默认分类',
-          slug: 'default',
-          description: '系统默认分类',
-          sort_order: 0,
-          status: 1,
-          is_default: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ]
-      saveCategories()
-    }
+    queryCategoryList({}).then((result)=>{
+        categories.value = result.details
+    },(error)=>{
+      ElMessage.error(error.msg||'加载分类数据失败')
+    })
   } catch (error) {
     ElMessage.error('加载分类数据失败')
   } finally {
@@ -385,14 +373,14 @@ const changeSort = (row, direction) => {
   if (targetIndex < 0 || targetIndex >= categories.value.length) return
 
   // 交换排序值
-  const currentSort = row.sort_order
-  const targetSort = categories.value[targetIndex].sort_order
+  const currentSort = row.sortOrder
+  const targetSort = categories.value[targetIndex].sortOrder
 
-  categories.value[currentIndex].sort_order = targetSort
-  categories.value[targetIndex].sort_order = currentSort
+  categories.value[currentIndex].sortOrder = targetSort
+  categories.value[targetIndex].sortOrder = currentSort
 
   // 重新排序
-  categories.value.sort((a, b) => a.sort_order - b.sort_order)
+  categories.value.sort((a, b) => a.sortOrder - b.sortOrder)
   saveCategories()
   ElMessage.success('排序已更新')
 }
@@ -419,7 +407,7 @@ const openCreateDialog = () => {
     name: '',
     slug: '',
     description: '',
-    sort_order: categories.value.length,
+    sortOrder: categories.value.length,
     status: 1
   }
   dialogVisible.value = true
@@ -431,7 +419,7 @@ const openEditDialog = (row) => {
     name: row.name,
     slug: row.slug,
     description: row.description || '',
-    sort_order: row.sort_order,
+    sortOrder: row.sortOrder,
     status: row.status
   }
   dialogVisible.value = true
@@ -482,32 +470,25 @@ const submitForm = async () => {
             name: formData.value.name,
             slug: formData.value.slug,
             description: formData.value.description,
-            sort_order: formData.value.sort_order,
+            sortOrder: formData.value.sortOrder,
             status: formData.value.status,
             updated_at: now
           }
           ElMessage.success('分类修改成功')
         }
       } else {
-        // 新建分类
-        const newId = Math.max(...categories.value.map(c => c.id), 0) + 1
-        categories.value.push({
-          id: newId,
+        let res = createNewCategory({
           name: formData.value.name,
           slug: formData.value.slug,
           description: formData.value.description,
-          sort_order: formData.value.sort_order,
+          sortOrder: formData.value.sortOrder,
           status: formData.value.status,
-          is_default: false,
-          created_at: now,
-          updated_at: now
         })
-        ElMessage.success('分类创建成功')
+
       }
 
       // 重新排序
-      categories.value.sort((a, b) => a.sort_order - b.sort_order)
-      saveCategories()
+      categories.value.sort((a, b) => a.sortOrder - b.sortOrder)
       dialogVisible.value = false
       closeDialog()
     } catch (error) {
@@ -517,7 +498,30 @@ const submitForm = async () => {
     }
   })
 }
+//保存分类修改
+const editCategory = async function(category){
+  return await createCategory(category).then((result) => {
+    categories.value.push(result.categoryInfos);
+    ElMessage.success("更新成功")
+    return true
+  }, (error) => {
+    ElMessage.error(error.msg || "更新分类失败")
+    return false
+  })
 
+
+}
+// 创建新得分类
+const createNewCategory = async function (category) {
+  return await createCategory(category).then((result) => {
+    categories.value.push(result.categoryInfos);
+    ElMessage.success("创建成功")
+    return true
+  }, (error) => {
+    ElMessage.error(error.msg || "新建分类失败")
+    return false
+  })
+}
 const handleDelete = async (row) => {
   if (row.is_default && row.id === 1) {
     ElMessage.warning('默认分类不能删除')
