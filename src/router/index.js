@@ -78,7 +78,8 @@ let routes = [
           {
               //默认大屏页面
               path: "/admin/posts",
-              component:()=>import("@/components/PostsManager.vue")
+              //component:()=>import("@/components/PostsManager.vue")
+              component:()=>import("@/views/admin/PostManagerView.vue")
           },
           {
               //评论管理
@@ -105,7 +106,15 @@ let routes = [
               //文章分类管理
               path: "/admin/tags",
               component:()=>import("@/views/admin/TagManagerView.vue")
-          },
+          },{
+              //用户中心
+              path: "/admin/userCenter",
+              component:()=>import("@/views/admin/UserCenterView.vue")
+          },{
+              //用户中心
+              path: "/admin/preference",
+              component:()=>import("@/views/admin/PreferenceView.vue")
+          }
       ]
     },
 

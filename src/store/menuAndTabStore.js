@@ -88,6 +88,16 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
                         label : "外观主题",
                         icon : "fas fa-palette",
                         index: "theme",
+                    },{
+                        name : "用户中心",
+                        label : "用户中心",
+                        icon : "fas fa-user",
+                        index: "userCenter",
+                    },{
+                        name : "偏好设置",
+                        label : "偏好设置",
+                        icon : "fas fa-cogs",
+                        index: "preference",
                     }
                 ]
             },
