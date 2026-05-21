@@ -26,7 +26,12 @@ let api = setApi({
     wb2db_batch_delete_category:{
         api:"/api/categories/wb2db_batch_delete_category",
         mock:"/mock/wb2db_batch_delete_category.json"
-    }
+    },
+    //交换分类排序
+    wb2db_swap_sort:{
+        api:"/api/categories/wb2db_swap_sort",
+        mock:"/mock/wb2db_swap_sort.json"
+    },
 })
 
 //生成分类
@@ -48,5 +53,9 @@ export  function  deleteCategory (params={}){
 //批量删除分类
 export  function  batchDeleteCategory (params={}){
     return fetch.post(api.wb2db_batch_delete_category,params)
+}
+//交换分类排序
+export  function  swapSortOrder (params={}){
+    return fetch.post(api.wb2db_swap_sort,params)
 }
 

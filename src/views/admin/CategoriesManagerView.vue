@@ -207,7 +207,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {zhCn} from "element-plus/es/locale/index";
-import {createCategory, queryCategoryList, updateCategory,deleteCategory,batchDeleteCategory} from "@/api/admin/categories.js";
+import {createCategory, queryCategoryList, updateCategory,deleteCategory,batchDeleteCategory,swapSortOrder} from "@/api/admin/categories.js";
 
 // 数据状态
 const categories = ref([])
@@ -353,8 +353,6 @@ const handleSelectionChange = (selection) => {
 const handleStatusChange = async (row) => {
   try {
     const index = categories.value.findIndex(c => c.id === row.id)
-    console.log(row.status)
-    console.log("Xxx",row.status==1)
     if (index !== -1) {
       console.log(row)
       let res = await editCategory({
@@ -363,18 +361,15 @@ const handleStatusChange = async (row) => {
         slug: row.slug,
         description: row.description,
         sortOrder: row.sortOrder,
-        status: row.status==1?0:1,
+        status: row.status
       })
 
       if(res){
-        console.log(res)
-       // ElMessage.success(`已${res.status == 1 ? '启用' : '禁用'}分类「${row.name}」`)
+        // ElMessage.success(`已${res.status == 1 ? '启用' : '禁用'}分类「${row.name}」`)
         categories.value[index] = res
       }else{
         ElMessage.error('操作失败')
       }
-
-
     }
   } catch (error) {
     console.log(error)
@@ -393,13 +388,18 @@ const changeSort = (row, direction) => {
   const currentSort = row.sortOrder
   const targetSort = categories.value[targetIndex].sortOrder
 
-  categories.value[currentIndex].sortOrder = targetSort
-  categories.value[targetIndex].sortOrder = currentSort
+  swapSortOrder({id1:row.id,id2:categories.value[targetIndex].id})
+      .then((result)=>{
+        categories.value[currentIndex].sortOrder = targetSort
+        categories.value[targetIndex].sortOrder = currentSort
+        // 重新排序
+        categories.value.sort((a, b) => a.sortOrder - b.sortOrder)
+        ElMessage.success('排序已更新')
+      },(error)=>{
+        ElMessage.error(error.msg||'操作失败')
+      })
 
-  // 重新排序
-  categories.value.sort((a, b) => a.sortOrder - b.sortOrder)
-  saveCategories()
-  ElMessage.success('排序已更新')
+
 }
 
 const generateSlug = () => {
