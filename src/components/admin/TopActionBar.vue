@@ -46,12 +46,12 @@ const handleLogout = () => {
 <style scoped>
 /* 顶部栏 */
 .top-action-bar {
-  background: #FFFFFF;
+  background: var(--admin-bg-topbar);
   padding: 6px 24px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--admin-border);
   height: 52px;
 }
 
@@ -62,11 +62,11 @@ const handleLogout = () => {
 
 .btn-icon-group .el-button {
   font-size: 1.2rem;
-  color: #5B6E8C;
+  color: var(--admin-btn-icon);
 }
 
 .btn-icon-group .el-button:hover {
-  color: #2563EB;
-  background: #F1F5F9;
+  color: var(--admin-btn-icon-hover-text);
+  background: var(--admin-btn-icon-hover-bg);
 }
 </style>

@@ -65,8 +65,8 @@
 <style scoped>
   /* 左侧导航区 */
   .nav-sidebar {
-    background: #FFFFFF;
-    border-right: 1px solid #E2E8F0;
+    background: var(--admin-bg-sidebar);
+    border-right: 1px solid var(--admin-border);
     transition: width 0.2s ease;
     width: 240px;
     display: flex;
@@ -89,7 +89,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 16px;
-    border-bottom: 1px solid #E9EEF3;
+    border-bottom: 1px solid var(--admin-border);
     margin-bottom: 8px;
   }
 
@@ -99,16 +99,16 @@
     gap: 8px;
     font-weight: 600;
     font-size: 1rem;
-    color: #0F172A;
+    color: var(--admin-text);
   }
 
   .logo-area i {
-    color: #3B82F6;
+    color: var(--admin-accent);
     font-size: 1.2rem;
   }
 
   .collapse-btn {
-    background: #F1F5F9;
+    background: var(--admin-collapse-btn);
     border: none;
     cursor: pointer;
     width: 32px;
@@ -119,12 +119,12 @@
     justify-content: center;
     transition: 0.2s;
     font-size: 1rem;
-    color: #475569;
+    color: var(--admin-collapse-text);
   }
 
   .collapse-btn:hover {
-    background: #E2E8F0;
-    color: #0F172A;
+    background: var(--admin-border);
+    color: var(--admin-text);
   }
 
   /* Element Plus 菜单样式覆盖 */
@@ -140,18 +140,18 @@
     margin: 2px 8px !important;
     border-radius: 6px !important;
     font-size: 0.85rem !important;
-    color: #334155 !important;
+    color: var(--admin-text-muted) !important;
   }
 
   .el-menu-item.is-active {
-    background: #EFF6FF !important;
-    color: #2563EB !important;
+    background: var(--admin-menu-active-bg) !important;
+    color: var(--admin-menu-active-text) !important;
   }
 
   .el-menu-item:hover,
   .el-sub-menu__title:hover {
-    background: #F1F5F9 !important;
-    color: #2563EB !important;
+    background: var(--admin-menu-active-bg) !important;
+    color: var(--admin-menu-active-text) !important;
   }
 
   .el-sub-menu .el-menu-item {

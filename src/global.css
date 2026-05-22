@@ -78,11 +78,69 @@ body {
     --line-grad-start: rgba(95,158,255,0.1);
     --code-bg: #0f1824; 
     --code-border: #253545;
-     --accent: #5f9eff;
-     --accent-glow: #5f9eff20;
-     --radius-card: 1.75rem;
-     --radius-btn: 2.5rem;
-     --container-max: 1240px;
+    --accent: #5f9eff;
+    --accent-glow: #5f9eff20;
+    --radius-card: 1.75rem;
+    --radius-btn: 2.5rem;
+    --container-max: 1240px;
+
+    /* admin 后台专用变量 */
+    --admin-bg-page:      #0F172A;
+    --admin-bg-sidebar:   #1E293B;
+    --admin-bg-topbar:    #1E293B;
+    --admin-bg-tabs:      #1E293B;
+    --admin-bg-card:      #1E293B;
+    --admin-bg-card-alt:  #2D3A4E;
+    --admin-bg-workspace: #0F172A;
+    --admin-border:       #334155;
+    --admin-text:         #E2E8F0;
+    --admin-text-muted:   #94A3B8;
+    --admin-text-sub:     #64748B;
+    --admin-accent:       #60A5FA;
+    --admin-menu-active-bg:   #2D3A4E;
+    --admin-menu-active-text: #60A5FA;
+    --admin-tabs-item:    #94A3B8;
+    --admin-tabs-active:  #60A5FA;
+    --admin-tabs-hover-bg:#2D3A4E;
+    --admin-btn-icon:     #94A3B8;
+    --admin-btn-icon-hover-text: #60A5FA;
+    --admin-btn-icon-hover-bg:  #334155;
+    --admin-collapse-btn: #334155;
+    --admin-collapse-text:#E2E8F0;
+    --admin-slug-bg:      #2D3A4E;
+    --admin-slug-text:    #94A3B8;
+    --admin-tag-footer-border: #334155;
+    --admin-empty-icon:   #475569;
+}
+
+/* admin 后台 亮色模式专用变量（:root 补充） */
+:root {
+    --admin-bg-page:      #F8FAFE;
+    --admin-bg-sidebar:   #FFFFFF;
+    --admin-bg-topbar:    #FFFFFF;
+    --admin-bg-tabs:      #FFFFFF;
+    --admin-bg-card:      #FFFFFF;
+    --admin-bg-card-alt:  #F8FAFE;
+    --admin-bg-workspace: #F8FAFE;
+    --admin-border:       #E2E8F0;
+    --admin-text:         #1E293B;
+    --admin-text-muted:   #64748B;
+    --admin-text-sub:     #94A3B8;
+    --admin-accent:       #2563EB;
+    --admin-menu-active-bg:   #EFF6FF;
+    --admin-menu-active-text: #2563EB;
+    --admin-tabs-item:    #64748B;
+    --admin-tabs-active:  #2563EB;
+    --admin-tabs-hover-bg:#F8FAFE;
+    --admin-btn-icon:     #5B6E8C;
+    --admin-btn-icon-hover-text: #2563EB;
+    --admin-btn-icon-hover-bg:  #F1F5F9;
+    --admin-collapse-btn: #F1F5F9;
+    --admin-collapse-text:#475569;
+    --admin-slug-bg:      #F1F5F9;
+    --admin-slug-text:    #475569;
+    --admin-tag-footer-border: #EDF2F7;
+    --admin-empty-icon:   #CBD5E1;
 }
 body {
     background: var(--bg-body); 

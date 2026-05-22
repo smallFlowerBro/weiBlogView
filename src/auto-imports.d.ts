@@ -12,6 +12,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ArticleEdit: typeof import('./components/ArticleEdit.vue')['default']
+    BackupSettingsPanel: typeof import('./components/admin/preference/BackupSettingsPanel.vue')['default']
+    BasicSettingsPanel: typeof import('./components/admin/preference/BasicSettingsPanel.vue')['default']
     CommentsManager: typeof import('./components/CommentsManager.vue')['default']
     Dashboard: typeof import('./components/Dashboard.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -56,16 +58,21 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    EmailSettingsPanel: typeof import('./components/admin/preference/EmailSettingsPanel.vue')['default']
     LogsPanel: typeof import('./components/LogsPanel.vue')['default']
     NavSidebar: typeof import('./components/admin/NavSidebar.vue')['default']
     PostsManager: typeof import('./components/PostsManager.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SecuritySettingsPanel: typeof import('./components/admin/preference/SecuritySettingsPanel.vue')['default']
     SiteFooter: typeof import('./components/common/SiteFooter.vue')['default']
     SiteHeader: typeof import('./components/common/SiteHeader.vue')['default']
+    StorageSettingsPanel: typeof import('./components/admin/preference/StorageSettingsPanel.vue')['default']
     ThemePanel: typeof import('./components/ThemePanel.vue')['default']
+    ThemeSettingsPanel: typeof import('./components/admin/preference/ThemeSettingsPanel.vue')['default']
     TopActionBar: typeof import('./components/admin/TopActionBar.vue')['default']
     TopTabsBar: typeof import('./components/admin/TopTabsBar.vue')['default']
+    UploadSettingsPanel: typeof import('./components/admin/preference/UploadSettingsPanel.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

@@ -483,16 +483,12 @@ const savePreferencesData = () => {
 // 应用主题
 const applyTheme = (theme) => {
   if (theme === 'dark') {
-    document.body.classList.add('dark-for-flat')
+    document.body.classList.add('dark')
   } else if (theme === 'light') {
-    document.body.classList.remove('dark-for-flat')
+    document.body.classList.remove('dark')
   } else if (theme === 'auto') {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (isDark) {
-      document.body.classList.add('dark-for-flat')
-    } else {
-      document.body.classList.remove('dark-for-flat')
-    }
+    document.body.classList.toggle('dark', isDark)
   }
 }
 
@@ -657,11 +653,7 @@ const setupThemeListener = () => {
   if (preferences.theme === 'auto') {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (preferences.theme === 'auto') {
-        if (e.matches) {
-          document.body.classList.add('dark-for-flat')
-        } else {
-          document.body.classList.remove('dark-for-flat')
-        }
+        document.body.classList.toggle('dark', e.matches)
       }
     })
   }
@@ -676,16 +668,16 @@ onMounted(() => {
 <style scoped>
 .profile-page {
   height: 100%;
-  background: #F8FAFE;
+  background: var(--admin-bg-page);
   padding: 24px;
   overflow-y: auto;
 }
 
 /* 顶部个人资料卡 */
 .profile-header {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 20px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   padding: 24px;
   margin-bottom: 24px;
 }
@@ -696,7 +688,7 @@ onMounted(() => {
   gap: 24px;
   margin-bottom: 24px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #EDF2F7;
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .avatar-wrapper {
@@ -752,7 +744,7 @@ onMounted(() => {
 .username {
   font-size: 24px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--admin-text);
   margin-bottom: 8px;
 }
 
@@ -762,7 +754,7 @@ onMounted(() => {
 
 .user-bio {
   font-size: 14px;
-  color: #64748B;
+  color: var(--admin-text-muted);
   line-height: 1.5;
 }
 
@@ -778,7 +770,7 @@ onMounted(() => {
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-  background: #F8FAFE;
+  background: var(--admin-bg-card-alt);
   border-radius: 16px;
 }
 
@@ -802,21 +794,21 @@ onMounted(() => {
 .stat-number {
   font-size: 24px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--admin-text);
   line-height: 1.2;
 }
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;
+  color: var(--admin-text-muted);
   margin-top: 4px;
 }
 
 /* 编辑区域 */
 .profile-main {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 20px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   padding: 24px;
 }
 
@@ -849,37 +841,5 @@ onMounted(() => {
   .profile-header, .profile-main {
     padding: 16px;
   }
-}
-
-/* 暗色主题适配 */
-body.dark-for-flat .profile-page {
-  background: #0F172A;
-}
-
-body.dark-for-flat .profile-header,
-body.dark-for-flat .profile-main {
-  background: #1E293B;
-  border-color: #334155;
-}
-
-body.dark-for-flat .avatar-section {
-  border-color: #334155;
-}
-
-body.dark-for-flat .username {
-  color: #E2E8F0;
-}
-
-body.dark-for-flat .user-bio,
-body.dark-for-flat .stat-label {
-  color: #94A3B8;
-}
-
-body.dark-for-flat .stat-number {
-  color: #F1F5F9;
-}
-
-body.dark-for-flat .stat-card {
-  background: #2D3A4E;
 }
 </style>

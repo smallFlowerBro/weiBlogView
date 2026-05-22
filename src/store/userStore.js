@@ -1,11 +1,8 @@
 import {defineStore} from "pinia";
 import {removeToken,setToken} from "@/lib/auth/index.js";
 import {loginByNameAndPwd} from "@/api/admin/user.js";
-import {useRouter} from "vue-router";
+import router from "@/router/index.js";
 export const userStore = defineStore("user",()=>{
-
-        //公共变量
-        let router = useRouter();
 
 
         //方法

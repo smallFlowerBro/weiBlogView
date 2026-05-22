@@ -41,12 +41,14 @@ export default defineConfig({
     rollupOptions:{
         output:{
             //分包策略 将第三方依赖单独打包 利于浏览器缓存
-            "vendor-vue":["vue","vue-router","pinia"],
-            "vendor-ui" :["element-plus"]
-        },
-        entryFileNames : 'js/[name]-[hash].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        assetsFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+            manualChunks:{
+                "vendor-vue":["vue","vue-router","pinia"],
+                "vendor-ui" :["element-plus"]
+            },
+            entryFileNames : 'js/[name]-[hash].js',
+            chunkFileNames: 'js/[name]-[hash].js',
+            assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+        }
     }
   }
     // build: {

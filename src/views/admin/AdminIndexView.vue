@@ -74,20 +74,6 @@ onMounted(() => {
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: #F1F5F9;
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
 .app-wrapper {
   display: flex;
   height: 100vh;
@@ -95,23 +81,19 @@ body {
   overflow: hidden;
 }
 
-
-
 /* 右侧工作区 */
 .right-workspace {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #F8FAFE;
+  background: var(--admin-bg-workspace);
 }
-
-
 
 /* Element Plus Tabs 自定义样式 */
 .custom-tabs {
-  background: #FFFFFF;
-  border-bottom: 1px solid #E2E8F0;
+  background: var(--admin-bg-tabs);
+  border-bottom: 1px solid var(--admin-border);
   padding: 0 16px;
 }
 
@@ -129,20 +111,20 @@ body {
   line-height: 44px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #64748B;
+  color: var(--admin-tabs-item);
   border: none;
   border-bottom: 2px solid transparent;
   transition: 0.1s;
 }
 
 .custom-tabs .el-tabs__item.is-active {
-  color: #2563EB;
-  border-bottom-color: #2563EB;
+  color: var(--admin-tabs-active);
+  border-bottom-color: var(--admin-tabs-active);
 }
 
 .custom-tabs .el-tabs__item:hover {
-  color: #2563EB;
-  background: #F8FAFE;
+  color: var(--admin-tabs-active);
+  background: var(--admin-tabs-hover-bg);
 }
 
 .custom-tabs .el-tabs__item .is-icon-close {
@@ -177,23 +159,23 @@ body {
 }
 
 .stat-card {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   padding: 16px 20px;
 }
 
 .stat-number {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--admin-text);
   margin-top: 8px;
 }
 
 .glass-panel {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -216,61 +198,5 @@ body {
 .badge-warning {
   background: #FEF3C7;
   color: #B45309;
-}
-
-/* 暗色主题 */
-
-
-body.dark .nav-sidebar,
-body.dark .top-action-bar,
-body.dark .custom-tabs,
-body.dark .stat-card,
-body.dark .glass-panel {
-  background: #1E293B;
-  border-color: #334155;
-}
-
-body.dark .el-menu-item,
-body.dark .el-sub-menu__title {
-  color: #CBD5E1 !important;
-}
-
-body.dark .el-menu-item.is-active {
-  background: #2D3A4E !important;
-  color: #60A5FA !important;
-}
-
-body.dark .collapse-btn {
-  background: #334155;
-  color: #E2E8F0;
-}
-
-body.dark .right-workspace {
-  background: #0F172A;
-}
-
-body.dark .stat-number {
-  color: #F1F5F9;
-}
-
-body.dark .custom-tabs .el-tabs__item {
-  color: #94A3B8;
-}
-
-body.dark .custom-tabs .el-tabs__item.is-active {
-  color: #60A5FA;
-}
-
-body.dark .custom-tabs .el-tabs__item:hover {
-  background: #2D3A4E;
-}
-
-body.dark .btn-icon-group .el-button {
-  color: #94A3B8;
-}
-
-body.dark .btn-icon-group .el-button:hover {
-  color: #60A5FA;
-  background: #334155;
 }
 </style>

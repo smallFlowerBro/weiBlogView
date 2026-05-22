@@ -28,31 +28,19 @@ axios_instance.interceptors.response.use(function (response){
     // 对响应数据做点什么
     return response.data;
 },function (error){
-    // 对响应错误做点什么
+    // 网络错误或请求未发出（无 response 对象）
+    if (!error.response) {
+        return Promise.reject({ code: -1, msg: '网络异常，请检查连接' });
+    }
+
     let status = error.response.status
-    console.log('错误响应==========》' + status)
-    if (status == 401 || status == 403) {
-        console.log('401-------------')
-        //TODO 退出并导向
-        //store.dispatch('logout').finally(() => location.reload())
-        //未认证或者token清一下 或者
+    if (status === 401 || status === 403) {
         removeToken();
-
-        return
+        return Promise.reject({ code: status, msg: '登录已过期，请重新登录' });
     }
 
-    let isSuccess = error.response.data.success
-    console.log('错误响应==========》' + isSuccess)
-    if (!isSuccess) {
-        console.log('error: ' + error.response.data.message)
-        let message = error.response.data.message || '请求失败'
-
-        // todo 失效的情况
-        // notification(message, 'error')
-        // showMessage(messsage, 'error')
-    }
-
-    return Promise.reject(error);
+    let message = error.response.data?.message || '请求失败'
+    return Promise.reject({ code: status, msg: message });
 })
 
 

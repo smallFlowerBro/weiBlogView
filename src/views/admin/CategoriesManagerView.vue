@@ -627,7 +627,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #F8FAFE;
+  background: var(--admin-bg-page);
   padding: 20px;
 }
 
@@ -659,8 +659,8 @@ onMounted(() => {
 }
 
 :deep(.el-table th) {
-  background-color: #F1F5F9;
-  color: #1E293B;
+  background-color: var(--admin-bg-card-alt);
+  color: var(--admin-text);
   font-weight: 600;
 }
 
@@ -675,12 +675,12 @@ onMounted(() => {
 }
 
 .slug-text {
-  background: #F1F5F9;
+  background: var(--admin-slug-bg);
   padding: 2px 8px;
   border-radius: 4px;
   font-family: monospace;
   font-size: 12px;
-  color: #3B82F6;
+  color: var(--admin-accent);
 }
 
 .sort-control {
@@ -715,41 +715,8 @@ onMounted(() => {
 /* 表单提示 */
 .form-tip {
   font-size: 12px;
-  color: #9CA3AF;
+  color: var(--admin-text-sub);
   margin-top: 4px;
-}
-
-/* 暗色主题适配 */
-body.dark-for-flat .category-manager {
-  background: #0F172A;
-}
-
-body.dark-for-flat .action-bar {
-  background: transparent;
-}
-
-body.dark-for-flat :deep(.el-table) {
-  background: #1E293B;
-  border-color: #334155;
-}
-
-body.dark-for-flat :deep(.el-table th) {
-  background: #2D3A4E;
-  color: #E2E8F0;
-}
-
-body.dark-for-flat :deep(.el-table td) {
-  border-color: #334155;
-  color: #CBD5E1;
-}
-
-body.dark-for-flat .slug-text {
-  background: #2D3A4E;
-  color: #60A5FA;
-}
-
-body.dark-for-flat .form-tip {
-  color: #64748B;
 }
 
 /* 响应式 */

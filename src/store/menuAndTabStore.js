@@ -73,22 +73,24 @@ export const menuAndTabStore = defineStore("menuAndTab",()=>{
                 ]
             },
             {
-                name : "系统设置",
-                icon : "fas fa-sliders-h",
-                index: "settings",
+                name : "运行维护",
+                icon : "fas fa-tools",
+                index: "maintain",
                 children : [
                     {
                         name : "操作日志",
                         label : "操作日志",
                         icon : "fas fa-file-alt",
                         index: "logs",
-                    },
+                    }
+                ]
+            },
+            {
+                name : "系统设置",
+                icon : "fas fa-sliders-h",
+                index: "settings",
+                children : [
                     {
-                        name : "外观主题",
-                        label : "外观主题",
-                        icon : "fas fa-palette",
-                        index: "theme",
-                    },{
                         name : "用户中心",
                         label : "用户中心",
                         icon : "fas fa-user",

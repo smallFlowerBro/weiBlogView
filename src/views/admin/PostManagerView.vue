@@ -533,7 +533,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #F8FAFE;
+  background: var(--admin-bg-page);
   padding: 20px;
 }
 
@@ -546,9 +546,9 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -581,13 +581,13 @@ onMounted(() => {
 .stat-number {
   font-size: 28px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--admin-text);
   line-height: 1.2;
 }
 
 .stat-label {
   font-size: 13px;
-  color: #64748B;
+  color: var(--admin-text-muted);
   margin-top: 4px;
 }
 
@@ -623,9 +623,9 @@ onMounted(() => {
 }
 
 .article-card {
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
   overflow: hidden;
   transition: all 0.2s;
   position: relative;
@@ -643,7 +643,7 @@ onMounted(() => {
 /* 封面图 */
 .card-cover {
   height: 180px;
-  background: #F1F5F9;
+  background: var(--admin-bg-card-alt);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -666,12 +666,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #EFF6FF, #F8FAFE);
+  background: var(--admin-bg-card-alt);
 }
 
 .cover-placeholder i {
   font-size: 48px;
-  color: #CBD5E1;
+  color: var(--admin-empty-icon);
 }
 
 .cover-overlay {
@@ -725,7 +725,7 @@ onMounted(() => {
 .card-title {
   font-size: 18px;
   font-weight: 600;
-  color: #1E293B;
+  color: var(--admin-text);
   margin-bottom: 12px;
   line-height: 1.4;
   cursor: pointer;
@@ -736,12 +736,12 @@ onMounted(() => {
 }
 
 .card-title:hover {
-  color: #3B82F6;
+  color: var(--admin-accent);
 }
 
 .card-summary {
   font-size: 13px;
-  color: #64748B;
+  color: var(--admin-text-muted);
   line-height: 1.5;
   margin-bottom: 12px;
   display: -webkit-box;
@@ -763,7 +763,7 @@ onMounted(() => {
 
 .more-tags {
   font-size: 12px;
-  color: #64748B;
+  color: var(--admin-text-muted);
   padding: 2px 8px;
 }
 
@@ -772,7 +772,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px solid #EDF2F7;
+  border-top: 1px solid var(--admin-tag-footer-border);
 }
 
 .footer-info {
@@ -806,7 +806,7 @@ onMounted(() => {
 
 .view-count, .comment-count {
   font-size: 12px;
-  color: #94A3B8;
+  color: var(--admin-text-sub);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -814,10 +814,10 @@ onMounted(() => {
 
 .footer-time {
   font-size: 12px;
-  color: #94A3B8;
+  color: var(--admin-text-sub);
 }
 
-/* 勾选框 - 无背景色 */
+/* 勾选框 */
 .card-checkbox {
   position: absolute;
   top: 12px;
@@ -832,19 +832,19 @@ onMounted(() => {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
-  background: #FFFFFF;
+  background: var(--admin-bg-card);
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--admin-border);
 }
 
 .empty-state i {
   font-size: 64px;
-  color: #CBD5E1;
+  color: var(--admin-empty-icon);
   margin-bottom: 16px;
 }
 
 .empty-state p {
-  color: #64748B;
+  color: var(--admin-text-muted);
   margin-bottom: 16px;
 }
 
@@ -863,7 +863,7 @@ onMounted(() => {
 .preview-title {
   font-size: 24px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--admin-text);
   margin-bottom: 16px;
 }
 
@@ -871,10 +871,10 @@ onMounted(() => {
   display: flex;
   gap: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #EDF2F7;
+  border-bottom: 1px solid var(--admin-tag-footer-border);
   margin-bottom: 20px;
   font-size: 13px;
-  color: #64748B;
+  color: var(--admin-text-muted);
 }
 
 .preview-meta i {
@@ -884,38 +884,6 @@ onMounted(() => {
 .preview-body {
   font-size: 14px;
   line-height: 1.8;
-}
-
-/* 暗色主题适配 */
-body.dark-for-flat .article-list {
-  background: #0F172A;
-}
-
-body.dark-for-flat .stat-card,
-body.dark-for-flat .article-card,
-body.dark-for-flat .empty-state {
-  background: #1E293B;
-  border-color: #334155;
-}
-
-body.dark-for-flat .stat-number {
-  color: #F1F5F9;
-}
-
-body.dark-for-flat .stat-label,
-body.dark-for-flat .card-summary,
-body.dark-for-flat .footer-time,
-body.dark-for-flat .view-count,
-body.dark-for-flat .comment-count {
-  color: #94A3B8;
-}
-
-body.dark-for-flat .card-title {
-  color: #E2E8F0;
-}
-
-body.dark-for-flat .card-footer {
-  border-color: #334155;
 }
 
 /* 响应式 */
